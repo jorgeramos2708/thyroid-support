@@ -17,27 +17,33 @@
 | T13 | Crear tema Material3 y recursos (colors, strings, themes) | done | UI |
 | T14 | Crear navegación con Compose Navigation | done | Navigation |
 | T15 | Crear componentes UI reutilizables (ui/components/) | done | UI |
-| T16 | Compilar proyecto y verificar `assembleDebug` | pending | CI |
-| T17 | Crear commit inicial en rama `feature/setup` | pending | Git |
+| T16 | Compilar proyecto y verificar `assembleDebug` | done | CI |
+| T17 | Crear commit inicial en rama `feature/setup` | done | Git |
 
-# Tareas Sprint 2 (pendiente)
+# Tareas Sprint 2
 
 | ID | Tarea | Estado | Componente |
 |----|-------|--------|------------|
-| T18 | Implementar Engine de recomendaciones (ATA/Endocrine) | pending | Domain |
-| T19 | Exportaciones CSV / PDF | pending | Data |
-| T20 | Pruebas unitarias (JUnit, MockK) | pending | Testing |
-| T21 | Configurar GitHub Actions CI | pending | CI |
+| T18 | Implementar Engine de recomendaciones (ATA/Endocrine Society 2020‑2022) | done | Domain |
+| T19 | Crear entidades Recommendation, LabResultAnalysis | done | Domain |
+| T20 | Crear RecommendationRepository + implementación | done | Data |
+| T21 | Crear RecommendationViewModel + RecommendationScreen | done | UI |
+| T22 | Agregar navegación a RecommendationScreen | done | Navigation |
+| T23 | Implementar ExportRepository + ExportRepositoryImpl (CSV/ZIP) | done | Data |
+| T24 | Crear ExportViewModel + ExportScreen | done | UI |
+| T25 | Agregar navegación a ExportScreen | done | Navigation |
+| T26 | Pruebas unitarias para RecommendationRepositoryImpl | done | Testing |
+| T27 | Configurar GitHub Actions CI (build + tests) | done | CI |
 
 # Tareas Sprint 3 (pendiente)
 
 | ID | Tarea | Estado | Componente |
 |----|-------|--------|------------|
-| T22 | Dashboard de tendencias (gráficos) | pending | UI |
-| T23 | Plan de alimentación personalizado | pending | Domain |
-| T24 | Programa de ejercicio adaptado | pending | Domain |
-| T25 | Notificaciones push personalizadas | pending | UI |
-| T26 | Módulo de diario/personalidad | pending | Domain |
-| T27 | Chat‑bot auto‑diagnóstico con IA OpenAI | pending | IA |
-| T28 | Backup ZIP cifrado | pending | Data |
-| T29 | Soporte multi‑idioma | pending | UI |
+| T28 | Dashboard de tendencias (gráficos) | pending | UI |
+| T29 | Plan de alimentación personalizado | pending | Domain |
+| T30 | Programa de ejercicio adaptado | pending | Domain |
+| T31 | Notificaciones push personalizadas | pending | UI |
+| T32 | Módulo de diario/personalidad | pending | Domain |
+| T33 | Chat‑bot auto‑diagnóstico con IA OpenAI | pending | IA |
+| T34 | Backup ZIP cifrado | pending | Data |
+| T35 | Soporte multi‑idioma | pending | UI |
