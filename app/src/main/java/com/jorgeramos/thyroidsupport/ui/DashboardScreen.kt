@@ -48,7 +48,7 @@ fun DashboardScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -56,30 +56,18 @@ fun DashboardScreen(
                 style = MaterialTheme.typography.headlineMedium
             )
 
-            // Quick action buttons - fila 1
-            QuickActionsRow(
+            // Botones de acceso rápido - 2 columnas, 5 filas
+            QuickActionsGrid(
                 buttons = listOf(
                     QuickAction("Síntomas", Icons.Default.Report, onNavigateToSymptomLog),
                     QuickAction("Laboratorio", Icons.Default.Science, onNavigateToLab),
                     QuickAction("Medicación", Icons.Default.Medication, onNavigateToMedication),
-                    QuickAction("Recomendaciones", Icons.Default.Lightbulb, onNavigateToRecommendation)
-                )
-            )
-
-            // Quick action buttons - fila 2
-            QuickActionsRow(
-                buttons = listOf(
+                    QuickAction("Recomendaciones", Icons.Default.Lightbulb, onNavigateToRecommendation),
+                    QuickAction("Exportar", Icons.Default.Share, onNavigateToExport),
                     QuickAction("Alimentación", Icons.Default.FoodBank, onNavigateToMealPlan),
                     QuickAction("Ejercicio", Icons.Default.FitnessCenter, onNavigateToExercise),
                     QuickAction("Diario", Icons.Default.Edit, onNavigateToDiary),
-                    QuickAction("Asistente IA", Icons.Default.SmartScreen, onNavigateToOpenAI)
-                )
-            )
-
-            // Quick action buttons - fila 3
-            QuickActionsRow(
-                buttons = listOf(
-                    QuickAction("Exportar", Icons.Default.Share, onNavigateToExport),
+                    QuickAction("Asistente IA", Icons.Default.SmartScreen, onNavigateToOpenAI),
                     QuickAction("Ajustes", Icons.Default.Settings, onNavigateToSettings)
                 )
             )
@@ -133,18 +121,19 @@ data class QuickAction(
 )
 
 @Composable
-fun QuickActionsRow(buttons: List<QuickAction>) {
-    Row(
+fun QuickActionsGrid(buttons: List<QuickAction>) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        buttons.forEach { action ->
+        items(buttons) { action ->
             QuickActionButton(
                 label = action.label,
                 icon = action.icon,
                 onClick = action.onClick,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }
@@ -157,32 +146,37 @@ fun QuickActionButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Button(
-        onClick = onClick,
-        modifier = modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.large,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
-        )
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+        Button(
+            onClick = onClick,
+            modifier = Modifier.fillMaxWidth().height(64.dp),
+            shape = MaterialTheme.shapes.large,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            )
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = label,
-                modifier = Modifier.size(18.dp)
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                text = label,
-                style = MaterialTheme.typography.labelLarge,
-                maxLines = 1,
-                softWrap = false
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = label,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.labelLarge,
+                    maxLines = 1,
+                    softWrap = false
+                )
+            }
         }
     }
 }
