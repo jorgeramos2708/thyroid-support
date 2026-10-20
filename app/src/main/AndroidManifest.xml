@@ -9,7 +9,7 @@
     <application
         android:name=".ThyroidApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@android:drawable/sym_def_app_icon"
         android:label="Thyroid Support"
         android:theme="@style/Theme.ThyroidSupport"
         android:networkSecurityConfig="@xml/network_security_config">

@@ -1,24 +1,26 @@
 package com.jorgeramos.thyroidsupport.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jorgeramos.thyroidsupport.domain.Lab
 import com.jorgeramos.thyroidsupport.presentation.LabViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 @Composable
 fun LabScreen(
-    patientId: Long = 1, // TODO: reemplazar con el id real del paciente
+    patientId: Long = 1,
     onNavigateBack: () -> Unit,
     viewModel: LabViewModel = hiltViewModel()
 ) {
@@ -30,10 +32,12 @@ fun LabScreen(
     var refLow by remember { mutableStateOf("") }
     var refHigh by remember { mutableStateOf("") }
 
-    val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+    val dateFormat = remember { SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()) }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(text = "Registro de Laboratorio", style = MaterialTheme.typography.headlineMedium)
@@ -49,9 +53,7 @@ fun LabScreen(
             value = value,
             onValueChange = { value = it },
             label = { Text("Valor") },
-            keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
-                keyboardType = androidx.compose.foundation.text.KeyboardType.Number
-            ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -59,9 +61,7 @@ fun LabScreen(
             value = refLow,
             onValueChange = { refLow = it },
             label = { Text("Rango bajo") },
-            keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
-                keyboardType = androidx.compose.foundation.text.KeyboardType.Number
-            ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -69,9 +69,7 @@ fun LabScreen(
             value = refHigh,
             onValueChange = { refHigh = it },
             label = { Text("Rango alto") },
-            keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
-                keyboardType = androidx.compose.foundation.text.KeyboardType.Number
-            ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -111,7 +109,10 @@ fun LabScreen(
         labs?.let { list ->
             if (list.isNotEmpty()) {
                 Text(text = "Últimos resultados", style = MaterialTheme.typography.titleMedium)
-                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     items(list) { lab ->
                         Card(modifier = Modifier.fillMaxWidth()) {
                             Column(modifier = Modifier.padding(16.dp)) {
@@ -122,7 +123,7 @@ fun LabScreen(
                                     style = MaterialTheme.typography.bodySmall
                                 )
                                 Text(
-                                    text = dateFormat.format(java.util.Date(lab.testDate)),
+                                    text = dateFormat.format(Date(lab.testDate)),
                                     style = MaterialTheme.typography.bodySmall
                                 )
                             }

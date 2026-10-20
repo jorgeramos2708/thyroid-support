@@ -1,26 +1,28 @@
 package com.jorgeramos.thyroidsupport.presentation
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.MutableLiveData
 import com.jorgeramos.thyroidsupport.domain.Patient
 import com.jorgeramos.thyroidsupport.domain.Symptom
 import com.jorgeramos.thyroidsupport.domain.repository.PatientRepository
 import com.jorgeramos.thyroidsupport.domain.repository.SymptomRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val patientRepository: PatientRepository,
     private val symptomRepository: SymptomRepository
 ) : ViewModel() {
 
     private val _currentPatient = MutableLiveData<Patient?>(null)
-    val currentPatient = _currentPatient.asLiveData()
+    val currentPatient: LiveData<Patient?> = _currentPatient
 
     private val _symptoms = MutableLiveData<List<Symptom>>(emptyList())
-    val symptoms = _symptoms.asLiveData()
+    val symptoms: LiveData<List<Symptom>> = _symptoms
 
     init {
         loadPatient()

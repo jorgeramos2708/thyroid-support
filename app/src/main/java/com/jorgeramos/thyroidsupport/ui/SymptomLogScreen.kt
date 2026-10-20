@@ -2,12 +2,9 @@ package com.jorgeramos.thyroidsupport.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jorgeramos.thyroidsupport.domain.Symptom
 import com.jorgeramos.thyroidsupport.presentation.SymptomViewModel
@@ -48,7 +45,7 @@ fun SymptomLogScreen(
             steps = 10,
             modifier = Modifier.fillMaxWidth()
         )
-        Text(text = "Gravedad: $severidad", style = MaterialTheme.typography.bodyMedium)
+        Text(text = "Gravedad: $severity", style = MaterialTheme.typography.bodyMedium)
 
         OutlinedTextField(
             value = notes,
@@ -74,11 +71,11 @@ fun SymptomLogScreen(
                     scope.launch {
                         viewModel.saveSymptom(
                             Symptom(
-                                patientId = 1, // TODO: replace with actual patient id
+                                patientId = 1,
                                 recordedAt = System.currentTimeMillis(),
                                 type = symptomType,
                                 severity = severity,
-                                notes = notes.takeIf { it.isNotEmpty() }.orNull()
+                                notes = notes.takeIf { it.isNotEmpty() }
                             )
                         )
                     }

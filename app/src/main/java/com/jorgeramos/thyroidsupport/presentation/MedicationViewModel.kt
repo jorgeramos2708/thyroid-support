@@ -1,20 +1,22 @@
 package com.jorgeramos.thyroidsupport.presentation
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.MutableLiveData
 import com.jorgeramos.thyroidsupport.domain.Medication
 import com.jorgeramos.thyroidsupport.domain.repository.MedicationRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class MedicationViewModel @Inject constructor(
     private val medicationRepository: MedicationRepository
 ) : ViewModel() {
 
     private val _medications = MutableLiveData<List<Medication>>(emptyList())
-    val medications = _medications.asLiveData()
+    val medications: LiveData<List<Medication>> = _medications
 
     fun loadMedications(patientId: Long) {
         viewModelScope.launch {

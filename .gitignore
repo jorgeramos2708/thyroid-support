@@ -1,6 +1,7 @@
 *.iml
 .gradle
 /app/build
+/build/
 /app/src/main/res/values/generated.xml
 .cxx
 local.properties
