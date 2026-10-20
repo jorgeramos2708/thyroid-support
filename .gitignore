@@ -1,0 +1,32 @@
+*.iml
+.gradle
+/app/build
+/app/src/main/res/values/generated.xml
+.cxx
+local.properties
+/app/src/main/java/com/jorgeramos/thyroidsupport/BuildConfig.kt
+/app/src/main/java/com/jorgeramos/thyroidsupport/R.kt
+
+# Kotlin
+*.class
+*.kotlin_module
+
+# Eclipse
+*.project
+.classpath
+.settings/
+
+# IntelliJ
+.idea/
+*.iws
+*.ipr
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Android
+*.apk
+*.aab
+*.apks
+*.zip
