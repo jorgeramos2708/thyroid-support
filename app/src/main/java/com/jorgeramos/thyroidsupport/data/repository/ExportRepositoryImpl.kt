@@ -4,7 +4,6 @@ import android.content.Context
 import com.jorgeramos.thyroidsupport.data.AppDatabase
 import com.jorgeramos.thyroidsupport.domain.repository.ExportRepository
 import java.io.File
-import java.io.FileWriter
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.zip.ZipEntry
@@ -24,7 +23,7 @@ class ExportRepositoryImpl @Inject constructor(
             filename = "symptoms_${dateFormat.format(Date())}.csv",
             header = "id,recorded_at,type,severity,notes",
             rows = symptoms.map { s ->
-                "${s.id},${s.recordedAt},${s.type},${s.severity},${s.notes.orEmpty()}"
+                "${s.id},${s.recordedAt},${s.type},${s.severity},${s.notes ?: ""}"
             }
         )
     }
@@ -46,7 +45,7 @@ class ExportRepositoryImpl @Inject constructor(
             filename = "medications_${dateFormat.format(Date())}.csv",
             header = "id,name,dose,frequency,start_date,end_date",
             rows = meds.map { m ->
-                "${m.id},${m.name},${m.dose},${m.frequency},${m.startDate},${m.endDate.orEmpty()}"
+                "${m.id},${m.name},${m.dose},${m.frequency},${m.startDate},${m.endDate ?: ""}"
             }
         )
     }
@@ -57,7 +56,7 @@ class ExportRepositoryImpl @Inject constructor(
             filename = "supplements_${dateFormat.format(Date())}.csv",
             header = "id,name,dose,start_date,end_date",
             rows = sups.map { s ->
-                "${s.id},${s.name},${s.dose},${s.startDate},${s.endDate.orEmpty()}"
+                "${s.id},${s.name},${s.dose},${s.startDate},${s.endDate ?: ""}"
             }
         )
     }

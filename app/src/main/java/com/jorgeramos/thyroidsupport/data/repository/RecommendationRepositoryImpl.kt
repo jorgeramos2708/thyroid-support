@@ -10,6 +10,7 @@ import com.jorgeramos.thyroidsupport.domain.MedicationRecommendation
 import com.jorgeramos.thyroidsupport.domain.ThyroidStatus
 import com.jorgeramos.thyroidsupport.domain.AntibodyStatus
 import com.jorgeramos.thyroidsupport.domain.repository.RecommendationRepository
+import kotlin.math.roundToInt
 import javax.inject.Inject
 
 class RecommendationRepositoryImpl @Inject constructor() : RecommendationRepository {
@@ -102,7 +103,7 @@ class RecommendationRepositoryImpl @Inject constructor() : RecommendationReposit
         val ft3High = ft3RefHigh ?: DEFAULT_FT3_HIGH
         val tpoAbHigh = tpoAbRefHigh ?: DEFAULT_TPOAB_HIGH
 
-        val tshStatus = evaluateThyroidStatus(tsh, tshLow, tshHigh)
+        val tshStatus = tsh?.let { evaluateThyroidStatus(it, tshLow, tshHigh) } ?: ThyroidStatus.NORMAL
         val ft4Status = ft4?.let { evaluateThyroidStatus(it, ft4Low, ft4High) }
         val ft3Status = ft3?.let { evaluateThyroidStatus(it, ft3Low, ft3High) }
         val tpoAbStatus = tpoAb?.let {
@@ -135,7 +136,7 @@ class RecommendationRepositoryImpl @Inject constructor() : RecommendationReposit
         // En adultos jóvenes sin cardiopatía: 1.6 mcg/kg
         // En mayores de 65 o con cardiopatía: 25-50 mcg inicial, ajustar cada 4-6 semanas
         val baseDoseMcg = if (age > 65) 25.0 else (weightKg * 1.6)
-        val roundedDose = (baseDoseMcg / 25).roundToInt() * 25
+        val roundedDose = (baseDoseMcg / 25.0).roundToInt() * 25
         val doseMcg = if (roundedDose < 25) 25.0 else roundedDose.toDouble()
 
         return MedicationRecommendation(

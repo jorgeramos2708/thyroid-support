@@ -1,18 +1,18 @@
 package com.jorgeramos.thyroidsupport.data.repository
 
 import android.content.Context
-import dagger.hilt.android.qualifiers.ApplicationContext
 import com.jorgeramos.thyroidsupport.domain.repository.OpenAIRequest
 import com.jorgeramos.thyroidsupport.domain.repository.OpenAIResponse
 import com.jorgeramos.thyroidsupport.domain.repository.OpenAIService
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import okhttp3.MediaType
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -21,7 +21,7 @@ class OpenAIServiceImpl @Inject constructor(
 ) : OpenAIService {
 
     private val client = OkHttpClient()
-    private val JSON = MediaType.get("application/json; charset=utf-8")
+    private val JSON = "application/json; charset=utf-8".toMediaType()
 
     override suspend fun chat(request: OpenAIRequest): OpenAIResponse = withContext(Dispatchers.IO) {
         val apiKey = getApiKey() ?: throw IllegalStateException("API Key de OpenAI no configurada")
@@ -44,7 +44,7 @@ class OpenAIServiceImpl @Inject constructor(
         val req = Request.Builder()
             .url("https://api.openai.com/v1/chat/completions")
             .header("Authorization", "Bearer $apiKey")
-            .post(RequestBody.create(body.toString(), JSON))
+            .post(body.toString().toRequestBody(JSON))
             .build()
 
         client.newCall(req).execute().use { response ->

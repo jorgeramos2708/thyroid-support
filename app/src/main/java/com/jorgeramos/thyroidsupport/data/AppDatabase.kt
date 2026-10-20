@@ -4,8 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.room.SupportSQLiteDatabase
+import androidx.room.TypeConverters
 import com.jorgeramos.thyroidsupport.domain.DiaryEntry
 import com.jorgeramos.thyroidsupport.domain.ExerciseEntry
 import com.jorgeramos.thyroidsupport.domain.Lab
@@ -29,6 +28,7 @@ import com.jorgeramos.thyroidsupport.domain.Symptom
     version = 2,
     exportSchema = false
 )
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun patientDao(): PatientDao

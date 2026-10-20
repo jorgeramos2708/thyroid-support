@@ -3,22 +3,24 @@ package com.jorgeramos.thyroidsupport.presentation
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.ListenableWorker
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.NotificationCompat
 import com.jorgeramos.thyroidsupport.R
 import com.jorgeramos.thyroidsupport.domain.repository.MedicationRepository
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
-import dagger.hilt.android.worker.HiltWorker
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import androidx.hilt.work.HiltWorker
 
 @HiltWorker
-class MedicationReminderWorker @Inject constructor(
-    context: Context,
-    workerParams: WorkerParameters,
+class MedicationReminderWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted workerParams: WorkerParameters,
     private val medicationRepository: MedicationRepository
 ) : Worker(context, workerParams) {
 
-    override fun doWork(): androidx.work.Result {
+    override fun doWork(): ListenableWorker.Result {
         val channelId = "medication_reminder"
         val notificationManager = NotificationManagerCompat.from(applicationContext)
 
@@ -30,9 +32,9 @@ class MedicationReminderWorker @Inject constructor(
                 android.app.NotificationManager.IMPORTANCE_HIGH
             ).apply {
                 description = "Recordatorios para tomar tu medicación tiroidea"
-                enableLights = true
+                enableLights(true)
                 lightColor = android.graphics.Color.BLUE
-                enableVibration = true
+                enableVibration(true)
             }
             notificationManager.createNotificationChannel(channel)
         }
@@ -47,6 +49,6 @@ class MedicationReminderWorker @Inject constructor(
 
         notificationManager.notify(1001, notification)
 
-        return Result.success()
+        return ListenableWorker.Result.success()
     }
 }

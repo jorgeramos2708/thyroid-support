@@ -1,7 +1,11 @@
 package com.jorgeramos.thyroidsupport.domain
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "exercise_entry")
 data class ExerciseEntry(
-    val id: Long = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val date: Long, // epoch ms
     val type: ExerciseType,
     val durationMinutes: Int,

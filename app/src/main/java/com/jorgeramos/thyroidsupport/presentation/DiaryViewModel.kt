@@ -1,26 +1,28 @@
 package com.jorgeramos.thyroidsupport.presentation
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.MutableLiveData
 import com.jorgeramos.thyroidsupport.domain.DiaryEntry
 import com.jorgeramos.thyroidsupport.domain.repository.DiaryRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class DiaryViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository
 ) : ViewModel() {
 
     private val _entries = MutableLiveData<List<DiaryEntry>>(emptyList())
-    val entries = _entries.asLiveData()
+    val entries: LiveData<List<DiaryEntry>> = _entries
 
     private val _loading = MutableLiveData(false)
-    val loading = _loading.asLiveData()
+    val loading: LiveData<Boolean> = _loading
 
     private val _error = MutableLiveData<String?>(null)
-    val error = _error.asLiveData()
+    val error: LiveData<String?> = _error
 
     fun loadEntries(startDate: Long, endDate: Long) {
         viewModelScope.launch {

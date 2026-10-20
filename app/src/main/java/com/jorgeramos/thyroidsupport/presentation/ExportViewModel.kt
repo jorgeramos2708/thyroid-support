@@ -2,29 +2,32 @@ package com.jorgeramos.thyroidsupport.presentation
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.core.content.FileProvider
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.MutableLiveData
 import com.jorgeramos.thyroidsupport.domain.repository.ExportRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
+@HiltViewModel
 class ExportViewModel @Inject constructor(
     private val exportRepository: ExportRepository,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private val _exportedFile = MutableLiveData<java.io.File?>(null)
-    val exportedFile = _exportedFile.asLiveData()
+    private val _exportedFile = MutableLiveData<File?>(null)
+    val exportedFile: LiveData<File?> = _exportedFile
 
     private val _error = MutableLiveData<String?>(null)
-    val error = _error.asLiveData()
+    val error: LiveData<String?> = _error
 
     private val _loading = MutableLiveData(false)
-    val loading = _loading.asLiveData()
+    val loading: LiveData<Boolean> = _loading
 
     fun exportSymptomsCsv(patientId: Long) {
         viewModelScope.launch {
@@ -96,7 +99,7 @@ class ExportViewModel @Inject constructor(
         }
     }
 
-    fun shareFile(file: java.io.File) {
+    fun shareFile(file: File) {
         val authority = "${context.packageName}.fileprovider"
         val contentUri = FileProvider.getUriForFile(context, authority, file)
         val intent = Intent(Intent.ACTION_SEND).apply {

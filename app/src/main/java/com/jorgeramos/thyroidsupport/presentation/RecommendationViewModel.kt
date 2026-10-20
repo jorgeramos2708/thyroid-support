@@ -1,33 +1,35 @@
 package com.jorgeramos.thyroidsupport.presentation
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.MutableLiveData
 import com.jorgeramos.thyroidsupport.domain.LabResultAnalysis
 import com.jorgeramos.thyroidsupport.domain.Patient
 import com.jorgeramos.thyroidsupport.domain.Recommendation
 import com.jorgeramos.thyroidsupport.domain.repository.PatientRepository
 import com.jorgeramos.thyroidsupport.domain.repository.RecommendationRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class RecommendationViewModel @Inject constructor(
     private val patientRepository: PatientRepository,
     private val recommendationRepository: RecommendationRepository
 ) : ViewModel() {
 
     private val _recommendation = MutableLiveData<Recommendation?>(null)
-    val recommendation = _recommendation.asLiveData()
+    val recommendation: LiveData<Recommendation?> = _recommendation
 
     private val _analysis = MutableLiveData<LabResultAnalysis?>(null)
-    val analysis = _analysis.asLiveData()
+    val analysis: LiveData<LabResultAnalysis?> = _analysis
 
     private val _patient = MutableLiveData<Patient?>(null)
-    val patient = _patient.asLiveData()
+    val patient: LiveData<Patient?> = _patient
 
     private val _loading = MutableLiveData(false)
-    val loading = _loading.asLiveData()
+    val loading: LiveData<Boolean> = _loading
 
     init {
         loadPatient()

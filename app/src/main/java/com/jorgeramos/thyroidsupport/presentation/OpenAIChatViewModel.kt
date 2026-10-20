@@ -1,14 +1,16 @@
 package com.jorgeramos.thyroidsupport.presentation
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.MutableLiveData
 import com.jorgeramos.thyroidsupport.domain.repository.OpenAIRequest
 import com.jorgeramos.thyroidsupport.domain.repository.OpenAIService
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class OpenAIChatViewModel @Inject constructor(
     private val openAIService: OpenAIService
 ) : ViewModel() {
@@ -20,13 +22,13 @@ class OpenAIChatViewModel @Inject constructor(
     )
 
     private val _messages = MutableLiveData<List<Message>>(emptyList())
-    val messages = _messages.asLiveData()
+    val messages: LiveData<List<Message>> = _messages
 
     private val _loading = MutableLiveData(false)
-    val loading = _loading.asLiveData()
+    val loading: LiveData<Boolean> = _loading
 
     private val _error = MutableLiveData<String?>(null)
-    val error = _error.asLiveData()
+    val error: LiveData<String?> = _error
 
     init {
         // Mensaje de bienvenida
