@@ -35,15 +35,15 @@
 | T26 | Pruebas unitarias para RecommendationRepositoryImpl | done | Testing |
 | T27 | Configurar GitHub Actions CI (build + tests) | done | CI |
 
-# Tareas Sprint 3 (pendiente)
+# Tareas Sprint 3
 
 | ID | Tarea | Estado | Componente |
 |----|-------|--------|------------|
-| T28 | Dashboard de tendencias (gráficos) | pending | UI |
-| T29 | Plan de alimentación personalizado | pending | Domain |
-| T30 | Programa de ejercicio adaptado | pending | Domain |
-| T31 | Notificaciones push personalizadas | pending | UI |
-| T32 | Módulo de diario/personalidad | pending | Domain |
-| T33 | Chat‑bot auto‑diagnóstico con IA OpenAI | pending | IA |
-| T34 | Backup ZIP cifrado | pending | Data |
-| T35 | Soporte multi‑idioma | pending | UI |
+| T28 | Dashboard con navegación completa y acceso rápido a todas las secciones | done | UI |
+| T29 | Plan de alimentación personalizado (entidades, repositorio, ViewModel, UI) | done | Domain/UI |
+| T30 | Programa de ejercicio adaptado (entidades, repositorio, ViewModel, UI) | done | Domain/UI |
+| T31 | Notificaciones push personalizadas (WorkManager + MedicationReminderWorker) | done | UI/Data |
+| T32 | Módulo de diario/personalidad (entidades, repositorio, ViewModel, UI) | done | Domain/UI |
+| T33 | Chat‑bot auto‑diagnóstico con IA OpenAI (datos anonimizados + descargo médico) | done | IA |
+| T34 | Backup ZIP cifrado (implementado en Sprint 2) | done | Data |
+| T35 | Soporte multi‑idioma base (strings.xml español) | done | UI |

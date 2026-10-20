@@ -88,4 +88,15 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // WorkManager para notificaciones programadas
+    val workVersion = "2.9.0"
+    implementation("androidx.work:work-runtime-ktx:$workVersion")
+
+    // OpenAI HTTP client (uso directo de OkHttp, sin SDK oficial para evitar dependencias pesadas)
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okio:okio:3.6.0")
+
+    // Gráficos simples con Compose (canvas nativo, sin librería pesada)
+    // Se usará androidx.compose.ui.graphics para dibujar líneas de tendencia
 }

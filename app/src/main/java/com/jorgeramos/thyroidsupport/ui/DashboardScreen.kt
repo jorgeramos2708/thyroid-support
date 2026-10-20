@@ -17,6 +17,15 @@ import com.jorgeramos.thyroidsupport.presentation.DashboardViewModel
 @Composable
 fun DashboardScreen(
     onNavigateToSymptomLog: () -> Unit,
+    onNavigateToLab: () -> Unit,
+    onNavigateToMedication: () -> Unit,
+    onNavigateToRecommendation: () -> Unit,
+    onNavigateToExport: () -> Unit,
+    onNavigateToMealPlan: () -> Unit,
+    onNavigateToExercise: () -> Unit,
+    onNavigateToDiary: () -> Unit,
+    onNavigateToOpenAI: () -> Unit,
+    onNavigateToSettings: () -> Unit,
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
     val patient by viewModel.currentPatient.observeAsState()
@@ -45,18 +54,87 @@ fun DashboardScreen(
                 style = MaterialTheme.typography.headlineMedium
             )
 
-            Button(
-                onClick = onNavigateToSymptomLog,
-                modifier = Modifier.fillMaxWidth()
+            // Quick action buttons
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Registrar Síntoma")
+                ExpandedButton(
+                    onClick = onNavigateToSymptomLog,
+                    label = "Síntomas",
+                    icon = Icons.Default.Report
+                )
+                ExpandedButton(
+                    onClick = onNavigateToLab,
+                    label = "Laboratorio",
+                    icon = Icons.Default.Science
+                )
+                ExpandedButton(
+                    onClick = onNavigateToMedication,
+                    label = "Medicación",
+                    icon = Icons.Default.Medication
+                )
+                ExpandedButton(
+                    onClick = onNavigateToRecommendation,
+                    label = "Recomendaciones",
+                    icon = Icons.Default.Lightbulb
+                )
             }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ExpandedButton(
+                    onClick = onNavigateToMealPlan,
+                    label = "Alimentación",
+                    icon = Icons.Default.FoodBank
+                )
+                ExpandedButton(
+                    onClick = onNavigateToExercise,
+                    label = "Ejercicio",
+                    icon = Icons.Default.FitnessCenter
+                )
+                ExpandedButton(
+                    onClick = onNavigateToDiary,
+                    label = "Diario",
+                    icon = Icons.Default.Edit
+                )
+                ExpandedButton(
+                    onClick = onNavigateToOpenAI,
+                    label = "Asistente IA",
+                    icon = Icons.Default.SmartScreen
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ExpandedButton(
+                    onClick = onNavigateToExport,
+                    label = "Exportar",
+                    icon = Icons.Default.Share
+                )
+                ExpandedButton(
+                    onClick = onNavigateToSettings,
+                    label = "Ajustes",
+                    icon = Icons.Default.Settings
+                )
+            }
+
+            Divider(modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp))
+
+            // Síntomas recientes
+            Text(text = "Síntomas recientes", style = MaterialTheme.typography.titleMedium)
 
             symptoms?.let { list ->
                 if (list.isEmpty()) {
                     Text("Sin síntomas registrados")
                 } else {
-                    Text("Síntomas recientes:")
                     LazyColumn(
                         modifier = Modifier.fillMaxWidth(),
                         contentPadding = PaddingValues(8.dp),
@@ -85,6 +163,38 @@ fun DashboardScreen(
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun ExpandedButton(
+    onClick: () -> Unit,
+    label: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector
+) {
+    Column(
+        modifier = Modifier.weight(1f),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Button(
+            onClick = onClick,
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.large
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = label,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(text = label, style = MaterialTheme.typography.bodySmall)
             }
         }
     }

@@ -4,7 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.room.SupportSQLiteDatabase
+import com.jorgeramos.thyroidsupport.domain.DiaryEntry
+import com.jorgeramos.thyroidsupport.domain.ExerciseEntry
 import com.jorgeramos.thyroidsupport.domain.Lab
+import com.jorgeramos.thyroidsupport.domain.MealPlanEntry
 import com.jorgeramos.thyroidsupport.domain.Medication
 import com.jorgeramos.thyroidsupport.domain.Patient
 import com.jorgeramos.thyroidsupport.domain.Supplement
@@ -16,9 +21,12 @@ import com.jorgeramos.thyroidsupport.domain.Symptom
         Symptom::class,
         Lab::class,
         Medication::class,
-        Supplement::class
+        Supplement::class,
+        MealPlanEntry::class,
+        ExerciseEntry::class,
+        DiaryEntry::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -28,6 +36,9 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun labDao(): LabDao
     abstract fun medicationDao(): MedicationDao
     abstract fun supplementDao(): SupplementDao
+    abstract fun mealPlanDao(): MealPlanDao
+    abstract fun exerciseDao(): ExerciseDao
+    abstract fun diaryDao(): DiaryDao
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null
@@ -38,7 +49,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "thyroid_support.db"
-                ).build()
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
                 INSTANCE = instance
                 instance
             }
