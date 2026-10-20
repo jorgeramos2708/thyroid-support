@@ -20,6 +20,9 @@ import com.jorgeramos.thyroidsupport.ui.OpenAIChatScreen
 import com.jorgeramos.thyroidsupport.ui.RecommendationScreen
 import com.jorgeramos.thyroidsupport.ui.SettingsScreen
 import com.jorgeramos.thyroidsupport.ui.SymptomLogScreen
+import com.jorgeramos.thyroidsupport.ui.home.HomeScreen
+import com.jorgeramos.thyroidsupport.ui.onboarding.OnboardingStep1Screen
+import com.jorgeramos.thyroidsupport.ui.onboarding.OnboardingStep2Screen
 
 @Composable
 fun ThyroidApp(navController: NavHostController = rememberNavController()) {
@@ -28,9 +31,62 @@ fun ThyroidApp(navController: NavHostController = rememberNavController()) {
     ) { padding ->
         NavHost(
             navController = navController,
-            startDestination = "dashboard",
+            startDestination = "onboardingStep1",
             modifier = Modifier.padding(padding)
         ) {
+            // Onboarding
+            composable("onboardingStep1") {
+                OnboardingStep1Screen(
+                    onNext = {
+                        navController.navigate("onboardingStep2")
+                    },
+                    onBack = {}
+                )
+            }
+            composable("onboardingStep2") {
+                OnboardingStep2Screen(
+                    onFinish = {
+                        navController.navigate("home") {
+                            popUpTo("onboardingStep1") { inclusive = true }
+                        }
+                    },
+                    onBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
+            // Home
+            composable("home") {
+                HomeScreen(
+                    onNavigateToSymptoms = {
+                        navController.navigate("symptomLog")
+                    },
+                    onNavigateToEvolution = {
+                        navController.navigate("lab")
+                    },
+                    onNavigateToExercise = {
+                        navController.navigate("exercise")
+                    },
+                    onNavigateToAdvice = {
+                        navController.navigate("recommendation")
+                    },
+                    onNavigateToExport = {
+                        navController.navigate("export")
+                    },
+                    onNavigateToAssistant = {
+                        navController.navigate("openAI")
+                    },
+                    onNavigateToLab = {
+                        navController.navigate("lab")
+                    },
+                    onNavigateToMedication = {
+                        navController.navigate("medication")
+                    }
+                )
+            }
+
+            // Existing screens
             composable("dashboard") {
                 DashboardScreen(
                     onNavigateToSymptomLog = {
