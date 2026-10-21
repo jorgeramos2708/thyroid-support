@@ -17,38 +17,41 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFFBB86FC),
-    primaryContainer = Color(0xFF3700B3),
-    secondary = Color(0xFF03DAC6),
+    primary = Color(0xFF1B4332),
+    primaryContainer = Color(0xFFD4ECD4),
+    secondary = Color(0xFF2E7D32),
     background = Color(0xFF121212),
-    surface = Color(0xFF121212),
-    error = Color(0xFFCF6679),
-    onPrimary = Color(0xFF000000),
-    onSecondary = Color(0xFF000000),
+    surface = Color(0xFF1E1E1E),
+    error = Color(0xFFB3261E),
+    onPrimary = Color(0xFFFFFFFF),
+    onSecondary = Color(0xFFFFFFFF),
     onBackground = Color(0xFFFFFFFF),
     onSurface = Color(0xFFFFFFFF),
-    onError = Color(0xFF000000)
+    onError = Color(0xFFFFFFFF)
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF6750A4),
-    primaryContainer = Color(0xFFADD8FF),
-    secondary = Color(0xFF625B71),
-    background = Color(0xFFFFFBFF),
-    surface = Color(0xFFFFFBFF),
-    error = Color(0xFFBA1A1A),
+    primary = Color(0xFF1B4332),
+    primaryContainer = Color(0xFFD4ECD4),
+    secondary = Color(0xFF2E7D32),
+    background = Color(0xFFF0F4F0),
+    surface = Color(0xFFFFFFFF),
+    error = Color(0xFFB3261E),
     onPrimary = Color(0xFFFFFFFF),
     onSecondary = Color(0xFFFFFFFF),
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
+    onBackground = Color(0xFF1E1E1E),
+    onSurface = Color(0xFF1E1E1E),
     onError = Color(0xFFFFFFFF)
 )
 
 private val AppTypography = Typography(
+    titleLarge = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold),
+    titleMedium = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium),
     bodyLarge = TextStyle(fontSize = 16.sp),
     bodyMedium = TextStyle(fontSize = 14.sp),
     bodySmall = TextStyle(fontSize = 12.sp),
-    headlineMedium = TextStyle(fontSize = 28.sp, fontWeight = FontWeight.Bold)
+    headlineMedium = TextStyle(fontSize = 28.sp, fontWeight = FontWeight.Bold),
+    labelLarge = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium)
 )
 
 @Composable
