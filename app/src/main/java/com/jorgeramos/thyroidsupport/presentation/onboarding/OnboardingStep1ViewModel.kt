@@ -1,6 +1,6 @@
 package com.jorgeramos.thyroidsupport.presentation.onboarding
 
-import androidx.hilt.lifecycle.HiltViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.LiveData
