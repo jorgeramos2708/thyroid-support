@@ -7,6 +7,7 @@ import com.jorgeramos.thyroidsupport.data.repository.ExerciseRepositoryImpl
 import com.jorgeramos.thyroidsupport.data.repository.ExportRepositoryImpl
 import com.jorgeramos.thyroidsupport.data.repository.LabRepositoryImpl
 import com.jorgeramos.thyroidsupport.data.repository.MealPlanRepositoryImpl
+import com.jorgeramos.thyroidsupport.data.repository.MedicationLogRepositoryImpl
 import com.jorgeramos.thyroidsupport.data.repository.MedicationRepositoryImpl
 import com.jorgeramos.thyroidsupport.data.repository.OpenAIServiceImpl
 import com.jorgeramos.thyroidsupport.data.repository.PatientRepositoryImpl
@@ -18,7 +19,7 @@ import com.jorgeramos.thyroidsupport.domain.repository.DiaryRepository
 import com.jorgeramos.thyroidsupport.domain.repository.ExerciseRepository
 import com.jorgeramos.thyroidsupport.domain.repository.ExportRepository
 import com.jorgeramos.thyroidsupport.domain.repository.LabRepository
-import com.jorgeramos.thyroidsupport.domain.repository.MealPlanRepository
+import com.jorgeramos.thyroidsupport.domain.repository.MedicationLogRepository
 import com.jorgeramos.thyroidsupport.domain.repository.MedicationRepository
 import com.jorgeramos.thyroidsupport.domain.repository.OpenAIService
 import com.jorgeramos.thyroidsupport.domain.repository.PatientRepository
@@ -70,4 +71,7 @@ object RepositoryModule {
 
     @Provides
     fun provideDailySymptomRepository(impl: DailySymptomRepositoryImpl): DailySymptomRepository = impl
+
+    @Provides
+    fun provideMedicationLogRepository(impl: MedicationLogRepositoryImpl): MedicationLogRepository = impl
 }

@@ -9,8 +9,9 @@ import com.jorgeramos.thyroidsupport.domain.DailySymptomEntry
 import com.jorgeramos.thyroidsupport.domain.DiaryEntry
 import com.jorgeramos.thyroidsupport.domain.ExerciseEntry
 import com.jorgeramos.thyroidsupport.domain.Lab
-import com.jorgeramos.thyroidsupport.domain.MealPlanEntry
 import com.jorgeramos.thyroidsupport.domain.Medication
+import com.jorgeramos.thyroidsupport.domain.MedicationLog
+import com.jorgeramos.thyroidsupport.domain.MealPlanEntry
 import com.jorgeramos.thyroidsupport.domain.Patient
 import com.jorgeramos.thyroidsupport.domain.Supplement
 import com.jorgeramos.thyroidsupport.domain.Symptom
@@ -25,9 +26,10 @@ import com.jorgeramos.thyroidsupport.domain.Symptom
         MealPlanEntry::class,
         ExerciseEntry::class,
         DiaryEntry::class,
-        DailySymptomEntry::class
+        DailySymptomEntry::class,
+        MedicationLog::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -42,6 +44,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun exerciseDao(): ExerciseDao
     abstract fun diaryDao(): DiaryDao
     abstract fun dailySymptomDao(): DailySymptomDao
+    abstract fun medicationLogDao(): MedicationLogDao
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null
