@@ -10,12 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.text.FontFamily
-import androidx.compose.ui.text.FontStyle
-import androidx.compose.ui.text.FontWeight
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
+import com.jorgeramos.thyroidsupport.R
 
 private val DarkColorScheme = darkColorScheme(
     primary = Color(0xFF2F6B4F),
@@ -47,55 +49,55 @@ private val LightColorScheme = lightColorScheme(
 
 private val AppTypography = androidx.compose.material3.Typography(
     titleLarge = TextStyle(
-        fontFamily = FontFamily(Font(f(R.fraunces_600))),
+        fontFamily = FontFamily(Font(R.font.fraunces_600)),
         fontSize = 28.sp,
         fontWeight = FontWeight(600),
         fontStyle = FontStyle.Normal
     ),
     titleMedium = TextStyle(
-        fontFamily = FontFamily(Font(f(R.fraunces_600))),
+        fontFamily = FontFamily(Font(R.font.fraunces_600)),
         fontSize = 26.sp,
         fontWeight = FontWeight(600),
         fontStyle = FontStyle.Normal
     ),
     bodyLarge = TextStyle(
-        fontFamily = FontFamily(Font(f(R.roboto_500))),
+        fontFamily = FontFamily(Font(R.font.roboto_500)),
         fontSize = 16.sp,
         fontWeight = FontWeight(500),
         fontStyle = FontStyle.Normal
     ),
     bodyMedium = TextStyle(
-        fontFamily = FontFamily(Font(f(R.roboto_500))),
+        fontFamily = FontFamily(Font(R.font.roboto_500)),
         fontSize = 15.sp,
         fontWeight = FontWeight(500),
         fontStyle = FontStyle.Normal
     ),
     bodySmall = TextStyle(
-        fontFamily = FontFamily(Font(f(R.roboto_400))),
+        fontFamily = FontFamily(Font(R.font.roboto_400)),
         fontSize = 12.sp,
         fontWeight = FontWeight(400),
         fontStyle = FontStyle.Normal
     ),
     labelLarge = TextStyle(
-        fontFamily = FontFamily(Font(f(R.roboto_700))),
+        fontFamily = FontFamily(Font(R.font.roboto_700)),
         fontSize = 16.sp,
         fontWeight = FontWeight(700),
         fontStyle = FontStyle.Normal
     ),
     labelMedium = TextStyle(
-        fontFamily = FontFamily(Font(f(R.roboto_500))),
+        fontFamily = FontFamily(Font(R.font.roboto_500)),
         fontSize = 13.sp,
         fontWeight = FontWeight(500),
         fontStyle = FontStyle.Normal
     ),
     labelSmall = TextStyle(
-        fontFamily = FontFamily(Font(f(R.roboto_600))),
+        fontFamily = FontFamily(Font(R.font.roboto_600)),
         fontSize = 12.sp,
         fontWeight = FontWeight(600),
         fontStyle = FontStyle.Normal
     ),
     headlineMedium = TextStyle(
-        fontFamily = FontFamily(Font(f(R.fraunces_600))),
+        fontFamily = FontFamily(Font(R.font.fraunces_600)),
         fontSize = 28.sp,
         fontWeight = FontWeight(600),
         fontStyle = FontStyle.Normal
@@ -108,11 +110,11 @@ fun ThyroidSupportTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
+    val view = LocalView.current
 
     SideEffect {
-        val window = (LocalView.current.context as Activity).window
-        window.statusBarColor = colorScheme.background.toArgb()
-        WindowCompat.getInsetsController(window, LocalView.current).isAppearanceLightStatusBars = !darkTheme
+        val window = (view.context as Activity).window
+        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
     }
 
     MaterialTheme(

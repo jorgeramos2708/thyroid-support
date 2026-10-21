@@ -1,14 +1,19 @@
 package com.jorgeramos.thyroidsupport.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jorgeramos.thyroidsupport.presentation.DailySymptomViewModel
@@ -35,12 +40,15 @@ fun DailySymptomScreen(
     var doctorNote by remember { mutableStateOf(latestEntry?.doctorNote ?: "") }
 
     val dateFormat = SimpleDateFormat("EEEE, dd 'de' MMMM", Locale("es", "MX"))
-    val today = dateFormat.format(Date()).capitalize()
+    val today = dateFormat.format(Date()).replaceFirstChar {
+        if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp, top = 24.dp),
+            .padding(horizontal = 20.dp)
+            .padding(top = 24.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         TopAppBar(
@@ -51,7 +59,7 @@ fun DailySymptomScreen(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Volver",
                         modifier = Modifier.size(48.dp),
-                        tint = MaterialTheme.colorScheme.ink
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             },
@@ -63,17 +71,16 @@ fun DailySymptomScreen(
         Text(
             text = today,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.inkSecondary
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         // Tarjeta "¿CÓMO TE SIENTES?"
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.card
+                containerColor = MaterialTheme.colorScheme.surface
             ),
-            shape = RoundedCornerShape(22.dp),
-            elevation = 0.dp
+            shape = RoundedCornerShape(22.dp)
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -87,12 +94,12 @@ fun DailySymptomScreen(
                     Text(
                         text = "¿CÓMO TE SIENTES?",
                         style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.ink
+                        color = MaterialTheme.colorScheme.primary
                     )
                     Text(
                         text = "0 nada · 10 muy intenso",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.inkSecondary
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
 
@@ -151,9 +158,9 @@ fun DailySymptomScreen(
             modifier = Modifier.fillMaxWidth(),
             maxLines = 2,
             shape = RoundedCornerShape(18.dp),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = MaterialTheme.colorScheme.accent,
-                unfocusedBorderColor = MaterialTheme.colorScheme.line
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.tertiary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant
             )
         )
 
@@ -177,7 +184,7 @@ fun DailySymptomScreen(
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.accent,
+                containerColor = MaterialTheme.colorScheme.tertiary,
                 contentColor = Color(0xFFFFFFFF)
             ),
             shape = RoundedCornerShape(28.dp)
@@ -231,13 +238,13 @@ fun SymptomSliderRow(
             Text(
                 text = label,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.ink
+                color = MaterialTheme.colorScheme.primary
             )
             Text(
                 text = value.toString(),
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    fontWeight = FontWeight(700),
-                    color = MaterialTheme.colorScheme.accent
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             )
         }
@@ -246,23 +253,19 @@ fun SymptomSliderRow(
             value = value.toFloat(),
             onValueChange = { onValueChange(it.toInt()) },
             valueRange = 0f..10f,
-            steps = 10,
+            steps = 9,
             modifier = Modifier.fillMaxWidth(),
             colors = SliderDefaults.colors(
-                activeTrackColor = MaterialTheme.colorScheme.accent,
-                inactiveTrackColor = MaterialTheme.colorScheme.tint,
-                thumbColor = Color(0xFFFFFFFF),
-                activeThumbColor = Color(0xFFFFFFFF),
-                inactiveThumbColor = Color(0xFFFFFFFF)
+                activeTrackColor = MaterialTheme.colorScheme.tertiary,
+                inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                thumbColor = Color.White
             )
-        ) { thumbOffset ->
-            // Draw thumb with border
-        }
+        )
     }
 }
 
 @Composable
-fun ValueCard(
+fun RowScope.ValueCard(
     label: String,
     unit: String,
     value: String,
@@ -275,20 +278,20 @@ fun ValueCard(
             value = value,
             onValueChange = onValueChange,
             label = { Text(label) },
-            keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
-                keyboardType = androidx.compose.foundation.text.KeyboardType.Number
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number
             ),
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(18.dp),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = MaterialTheme.colorScheme.accent,
-                unfocusedBorderColor = MaterialTheme.colorScheme.line
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.tertiary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant
             )
         )
         Text(
             text = unit,
             style = MaterialTheme.typography.bodySmall.copy(
-                color = MaterialTheme.colorScheme.inkSecondary
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             ),
             modifier = Modifier.align(Alignment.End)
         )

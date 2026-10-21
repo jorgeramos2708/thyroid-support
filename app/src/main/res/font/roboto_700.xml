@@ -6,8 +6,6 @@
         android:fontWeight="700"
         app:fontStyle="normal"
         app:fontWeight="700"
-        android:resType="font"
-        app:resType="font"
-        android:font="@font/roboto_regular"
-        app:font="@font/roboto_regular" />
+        android:font="@font/roboto"
+        app:font="@font/roboto" />
 </font-family>

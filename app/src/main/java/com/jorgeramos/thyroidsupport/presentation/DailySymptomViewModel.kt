@@ -1,9 +1,9 @@
 package com.jorgeramos.thyroidsupport.presentation
 
-import androidx.hilt.lifecycle.HiltViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.jorgeramos.thyroidsupport.domain.DailySymptomEntry
 import com.jorgeramos.thyroidsupport.domain.repository.DailySymptomRepository
@@ -16,13 +16,13 @@ class DailySymptomViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _entry = MutableLiveData<DailySymptomEntry?>(null)
-    val entry = _entry.asLiveData()
+    val entry: LiveData<DailySymptomEntry?> = _entry
 
     private val _loading = MutableLiveData(false)
-    val loading = _loading.asLiveData()
+    val loading: LiveData<Boolean> = _loading
 
     private val _error = MutableLiveData<String?>(null)
-    val error = _error.asLiveData()
+    val error: LiveData<String?> = _error
 
     fun loadLatest() {
         viewModelScope.launch {
@@ -62,7 +62,7 @@ class DailySymptomViewModel @Inject constructor(
                     sleepProblems = sleepProblems,
                     weightKg = weightKg,
                     heartRate = heartRate,
-                    doctorNote = doctorNote.takeIf { it.isNotBlank() }.orNull()
+                    doctorNote = doctorNote?.takeIf { it.isNotBlank() }
                 )
                 val id = dailySymptomRepository.insert(entry)
                 _entry.value = entry.copy(id = id)

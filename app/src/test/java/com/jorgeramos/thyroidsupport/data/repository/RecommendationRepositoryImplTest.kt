@@ -5,18 +5,18 @@ import com.jorgeramos.thyroidsupport.domain.LabResultAnalysis
 import com.jorgeramos.thyroidsupport.domain.ThyroidStatus
 import com.jorgeramos.thyroidsupport.domain.AntibodyStatus
 import com.jorgeramos.thyroidsupport.domain.repository.RecommendationRepository
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import kotlin.coroutines.test.test
 
 class RecommendationRepositoryImplTest {
 
     private val repo: RecommendationRepository = RecommendationRepositoryImpl()
 
     @Test
-    fun `analiza TSH alto como hipotiroidismo`() = test {
+    fun `analiza TSH alto como hipotiroidismo`() = runTest {
         val analysis = repo.analyzeLabResults(
             tsh = 8.5,
             ft4 = null,
@@ -36,7 +36,7 @@ class RecommendationRepositoryImplTest {
     }
 
     @Test
-    fun `analiza TSH bajo como hipertiroidismo`() = test {
+    fun `analiza TSH bajo como hipertiroidismo`() = runTest {
         val analysis = repo.analyzeLabResults(
             tsh = 0.05,
             ft4 = null,
@@ -55,7 +55,7 @@ class RecommendationRepositoryImplTest {
     }
 
     @Test
-    fun `analiza TSH normal`() = test {
+    fun `analiza TSH normal`() = runTest {
         val analysis = repo.analyzeLabResults(
             tsh = 2.5,
             ft4 = null,
@@ -74,7 +74,7 @@ class RecommendationRepositoryImplTest {
     }
 
     @Test
-    fun `detecta anti-TPO elevados`() = test {
+    fun `detecta anti-TPO elevados`() = runTest {
         val analysis = repo.analyzeLabResults(
             tsh = 5.0,
             ft4 = null,
@@ -93,7 +93,7 @@ class RecommendationRepositoryImplTest {
     }
 
     @Test
-    fun `genera recomendación para hipotiroidismo con levotiroxina`() = test {
+    fun `genera recomendación para hipotiroidismo con levotiroxina`() = runTest {
         val patient = Patient(id = 1, name = "María", birthDate = System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 365 * 35, gender = "F")
         val analysis = LabResultAnalysis(
             tshStatus = ThyroidStatus.HIGH,
@@ -109,11 +109,11 @@ class RecommendationRepositoryImplTest {
         assertNotNull(rec.medication)
         assertEquals("Levotiroxina (Eutirox)", rec.medication!!.name)
         assertTrue(rec.medication!!.dose.contains("mcg"))
-        assertTrue(rec.evidenceLevel.contains("ATA 2020") || rec.sources.any { it.contains("ATA") })
+        assertTrue(rec.medication!!.evidenceLevel.contains("ATA 2020") || rec.sources.any { it.contains("ATA") })
     }
 
     @Test
-    fun `genera recomendación de selenio para anti-TPO positivos`() = test {
+    fun `genera recomendación de selenio para anti-TPO positivos`() = runTest {
         val patient = Patient(id = 1, name = "María", birthDate = System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 365 * 35, gender = "F")
         val analysis = LabResultAnalysis(
             tshStatus = ThyroidStatus.NORMAL,
@@ -132,7 +132,7 @@ class RecommendationRepositoryImplTest {
     }
 
     @Test
-    fun `incluye advertencia para TSH suprimido`() = test {
+    fun `incluye advertencia para TSH suprimido`() = runTest {
         val patient = Patient(id = 1, name = "María", birthDate = System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 365 * 35, gender = "F")
         val analysis = LabResultAnalysis(
             tshStatus = ThyroidStatus.LOW,
@@ -150,7 +150,7 @@ class RecommendationRepositoryImplTest {
     }
 
     @Test
-    fun `confianza baja con pocos datos`() = test {
+    fun `confianza baja con pocos datos`() = runTest {
         val analysis = repo.analyzeLabResults(
             tsh = 2.5,
             ft4 = null,
@@ -169,7 +169,7 @@ class RecommendationRepositoryImplTest {
     }
 
     @Test
-    fun `confianza alta con todos los datos`() = test {
+    fun `confianza alta con todos los datos`() = runTest {
         val analysis = repo.analyzeLabResults(
             tsh = 2.5,
             ft4 = 15.0,

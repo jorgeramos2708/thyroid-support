@@ -1,7 +1,11 @@
 package com.jorgeramos.thyroidsupport.domain
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "daily_symptom_entry")
 data class DailySymptomEntry(
-    val id: Long = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val date: Long, // epoch ms del día
     val fatigue: Int, // 0-10 Cansancio
     val coldSensitivity: Int, // 0-10 Sensibilidad al frío
