@@ -1,9 +1,10 @@
 package com.jorgeramos.thyroidsupport.ui.onboarding
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -43,80 +44,99 @@ fun OnboardingStep1Screen(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        TopAppBar(
-            title = { Text("Tu perfil") },
-            navigationIcon = {
-                IconButton(
-                    onClick = onBack,
-                    enabled = false
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Volver",
-                        modifier = Modifier.size(48.dp),
-                        tint = MaterialTheme.colorScheme.ink
-                    )
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer
+        // Barra de progreso (dos segmentos)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(6.dp)
+                    .background(MaterialTheme.colorScheme.accent, shape = RoundedCornerShape(3.dp))
             )
-        )
+            Spacer(modifier = Modifier.width(4.dp))
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(6.dp)
+                    .background(MaterialTheme.colorScheme.tint, shape = RoundedCornerShape(3.dp))
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Encabezado con flecha y título
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(
+                onClick = onBack,
+                enabled = false
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Volver",
+                    modifier = Modifier.size(48.dp),
+                    tint = MaterialTheme.colorScheme.ink
+                )
+            }
+            Text(
+                text = "Paso 1 de 2",
+                style = MaterialTheme.typography.labelSmall.copy(
+                    fontWeight = FontWeight(600)
+                ),
+                color = MaterialTheme.colorScheme.accent
+            )
+            Spacer(modifier = Modifier.weight(1f))
+        }
 
         Text(
-            text = "Paso 1 de 2",
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.accent
-        )
-
-        Text(
-            text = "¿Cómo te llamas?",
-            style = MaterialTheme.typography.titleMedium,
+            text = "Tu perfil",
+            style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.ink
         )
 
-        OutlinedTextField(
-            value = name,
-            onValueChange = {
-                name = it
-                viewModel.updateName(it)
-            },
-            label = { Text("Nombre") },
+        // Dos campos en fila: Nombre y Año de nacimiento
+        Row(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(18.dp),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = MaterialTheme.colorScheme.accent,
-                unfocusedBorderColor = MaterialTheme.colorScheme.line
+            horizontalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            ExpandedTextField(
+                value = name,
+                onValueChange = {
+                    name = it
+                    viewModel.updateName(it)
+                },
+                label = "Nombre",
+                modifier = Modifier.weight(1f)
             )
-        )
-
-        OutlinedTextField(
-            value = birthYear,
-            onValueChange = {
-                birthYear = it
-                viewModel.updateBirthYear(it.toIntOrNull() ?: 0)
-            },
-            label = { Text("Año de nacimiento") },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            ),
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(18.dp),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = MaterialTheme.colorScheme.accent,
-                unfocusedBorderColor = MaterialTheme.colorScheme.line
+            ExpandedTextField(
+                value = birthYear,
+                onValueChange = {
+                    birthYear = it
+                    viewModel.updateBirthYear(it.toIntOrNull() ?: 0)
+                },
+                label = "Año de nacimiento",
+                modifier = Modifier.weight(1f),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                )
             )
-        )
+        }
 
+        // Etiqueta CONDICIÓN
         Text(
             text = "CONDICIÓN",
             style = MaterialTheme.typography.labelSmall.copy(
                 letterSpacing = 0.14.em
             ),
-            color = MaterialTheme.colorScheme.accent
+            color = MaterialTheme.colorScheme.accent,
+            modifier = Modifier.padding(top = 8.dp)
         )
 
-        ConditionTypeOption(
+        // Tres tarjetas de condición
+        ConditionTypeCard(
             conditionType = ConditionType.HYPOTHYROIDISM,
             isSelected = conditionType == ConditionType.HYPOTHYROIDISM,
             onClick = {
@@ -125,7 +145,7 @@ fun OnboardingStep1Screen(
             }
         )
 
-        ConditionTypeOption(
+        ConditionTypeCard(
             conditionType = ConditionType.HYPERTHYROIDISM,
             isSelected = conditionType == ConditionType.HYPERTHYROIDISM,
             onClick = {
@@ -134,54 +154,66 @@ fun OnboardingStep1Screen(
             }
         )
 
-        ConditionTypeOption(
+        ConditionTypeCard(
             conditionType = ConditionType.OTHER,
             isSelected = conditionType == ConditionType.OTHER,
             onClick = { viewModel.selectConditionType(ConditionType.OTHER) }
         )
 
-        if (conditionType == ConditionType.OTHER) {
-            Text(
-                text = "Seleccionaste 'Otra o no lo sé'. Verás consejos generales adaptados a tu perfil.",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.inkSecondary
-            )
-        }
-
+        // Etiqueta ¿ALGO DE ESTO APLICA?
         Text(
             text = "¿ALGO DE ESTO APLICA?",
             style = MaterialTheme.typography.labelSmall.copy(
                 letterSpacing = 0.14.em
             ),
-            color = MaterialTheme.colorScheme.accent
+            color = MaterialTheme.colorScheme.accent,
+            modifier = Modifier.padding(top = 8.dp)
         )
 
-        CheckboxRow(
+        // Chips con forma de píldora
+        PillChip(
             label = "Embarazo o planificación",
             checked = profile?.hasPregnancy == true,
             onCheckedChange = { viewModel.togglePregnancy(it) }
         )
 
-        CheckboxRow(
+        PillChip(
             label = "Problemas del corazón",
             checked = profile?.hasHeartProblems == true,
             onCheckedChange = { viewModel.toggleHeartProblems(it) }
         )
 
-        CheckboxRow(
+        PillChip(
             label = "Osteoporosis",
             checked = profile?.hasOsteoporosis == true,
             onCheckedChange = { viewModel.toggleOsteoporosis(it) }
         )
 
+        PillChip(
+            label = "Ninguna",
+            checked = profile?.hasPregnancy == false &&
+                profile?.hasHeartProblems == false &&
+                profile?.hasOsteoporosis == false,
+            onCheckedChange = { checked ->
+                if (checked) {
+                    viewModel.togglePregnancy(false)
+                    viewModel.toggleHeartProblems(false)
+                    viewModel.toggleOsteoporosis(false)
+                }
+            }
+        )
+
+        // Nota al pie
         Text(
             text = "Esto adapta los ejercicios y consejos que ves. Siempre sigue las indicaciones de tu médico.",
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.inkSecondary
+            color = MaterialTheme.colorScheme.inkSecondary,
+            modifier = Modifier.padding(top = 8.dp)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        // Botón Continuar anclado al pie
         Button(
             onClick = {
                 if (isValid) {
@@ -202,6 +234,7 @@ fun OnboardingStep1Screen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = "Continuar")
+                Spacer(modifier = Modifier.width(8.dp))
                 Icon(
                     imageVector = Icons.Default.ArrowForward,
                     contentDescription = "Siguiente",
@@ -213,7 +246,7 @@ fun OnboardingStep1Screen(
 }
 
 @Composable
-fun ConditionTypeOption(
+fun ConditionTypeCard(
     conditionType: ConditionType,
     isSelected: Boolean,
     onClick: () -> Unit
@@ -258,7 +291,7 @@ fun ConditionTypeOption(
 }
 
 @Composable
-fun CheckboxRow(
+fun PillChip(
     label: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit
@@ -273,13 +306,40 @@ fun CheckboxRow(
             colors = CheckboxDefaults.colors(
                 checkedColor = MaterialTheme.colorScheme.accent,
                 uncheckedColor = MaterialTheme.colorScheme.line
-            )
+            ),
+            modifier = Modifier.size(24.dp)
         )
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.ink,
             modifier = Modifier.weight(1f).padding(start = 12.dp)
+        )
+    }
+}
+
+@Composable
+fun ExpandedTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    modifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions? = null
+) {
+    Column(
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            label = { Text(label) },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(18.dp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = MaterialTheme.colorScheme.accent,
+                unfocusedBorderColor = MaterialTheme.colorScheme.line
+            ),
+            keyboardOptions = keyboardOptions
         )
     }
 }

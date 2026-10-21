@@ -19,4 +19,5 @@ val ColorScheme.hero: Color get() = Color(0xFF1E3A2F)
 val ColorScheme.gold: Color get() = Color(0xFFE3C58B)
 val ColorScheme.goldOn: Color get() = Color(0xFF2A2110)
 val ColorScheme.card: Color get() = Color(0xFFFFFFFF)
+val ColorScheme.accent: Color get() = Color(0xFF2F6B4F)
 
