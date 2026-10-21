@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.jorgeramos.thyroidsupport.ui.AdviceScreen
 import com.jorgeramos.thyroidsupport.ui.DailySymptomScreen
 import com.jorgeramos.thyroidsupport.ui.DashboardScreen
 import com.jorgeramos.thyroidsupport.ui.DiaryScreen
@@ -174,6 +175,11 @@ fun ThyroidApp(navController: NavHostController = rememberNavController()) {
             }
             composable("trends") {
                 LabTrendScreen(onNavigateBack = {
+                    navController.popBackStack()
+                })
+            }
+            composable("advice") {
+                AdviceScreen(onNavigateBack = {
                     navController.popBackStack()
                 })
             }

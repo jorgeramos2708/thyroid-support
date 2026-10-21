@@ -1,15 +1,11 @@
-feat: Etapa 5 - Mi evolución de laboratorio (Imagen Y)
+feat: Etapa 6 - Consejos segun sintomas (Imagen AB)
 
-- LabTrendEntry entidad de dominio para historial de laboratorio
-- LabTrendDao y LabTrendRepository para persistencia
-- LabTrendViewModel con lógica de tendencias
-- LabTrendScreen con gráfico de línea Canvas basado en Imagen Y
-  - Selector de laboratorio (TSH, FT4 libre, FT3 libre, Anti-TPO)
-  - Gráfico de línea con puntos y rangos de referencia
-  - Último resultado con estado
-  - Cambios de dosis
-  - Botón 'Agregar resultado'
-- AppDatabase versión 5 con LabTrendEntry
-- DatabaseModule y RepositoryModule actualizados
-- ThyroidApp.kt: ruta trends agregada
-- Colores verde salvia según diseno-thyroid-support.md
+- SymptomAdvice entidad de dominio con sintomas y consejos
+- AdviceViewModel con logica de seleccion y gravedad
+- AdviceScreen basada en Imagen AB
+  - Chips de sintomas activos
+  - Tarjetas de consejos personalizados por severidad
+  - Tarjeta de advertencia para sintomas severos
+  - Boton 'Anadir al resumen para mi medico'
+- ThyroidApp.kt: ruta advice agregada
+- Colores verde salvia segun diseno-thyroid-support.md
