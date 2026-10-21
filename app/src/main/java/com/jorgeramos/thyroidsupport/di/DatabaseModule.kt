@@ -6,6 +6,7 @@ import com.jorgeramos.thyroidsupport.data.DailySymptomDao
 import com.jorgeramos.thyroidsupport.data.DiaryDao
 import com.jorgeramos.thyroidsupport.data.ExerciseDao
 import com.jorgeramos.thyroidsupport.data.LabDao
+import com.jorgeramos.thyroidsupport.data.LabTrendDao
 import com.jorgeramos.thyroidsupport.data.MealPlanDao
 import com.jorgeramos.thyroidsupport.data.MedicationDao
 import com.jorgeramos.thyroidsupport.data.MedicationLogDao
@@ -67,4 +68,8 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideMedicationLogDao(db: AppDatabase): MedicationLogDao = db.medicationLogDao()
+
+    @Provides
+    @Singleton
+    fun provideLabTrendDao(db: AppDatabase): LabTrendDao = db.labTrendDao()
 }

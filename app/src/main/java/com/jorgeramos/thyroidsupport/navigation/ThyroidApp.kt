@@ -15,6 +15,7 @@ import com.jorgeramos.thyroidsupport.ui.DiaryScreen
 import com.jorgeramos.thyroidsupport.ui.ExerciseScreen
 import com.jorgeramos.thyroidsupport.ui.ExportScreen
 import com.jorgeramos.thyroidsupport.ui.LabScreen
+import com.jorgeramos.thyroidsupport.ui.LabTrendScreen
 import com.jorgeramos.thyroidsupport.ui.MealPlanScreen
 import com.jorgeramos.thyroidsupport.ui.MedicationScreen
 import com.jorgeramos.thyroidsupport.ui.OpenAIChatScreen
@@ -168,6 +169,11 @@ fun ThyroidApp(navController: NavHostController = rememberNavController()) {
             }
             composable("lab") {
                 LabScreen(onNavigateBack = {
+                    navController.popBackStack()
+                })
+            }
+            composable("trends") {
+                LabTrendScreen(onNavigateBack = {
                     navController.popBackStack()
                 })
             }

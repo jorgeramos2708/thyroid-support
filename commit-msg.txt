@@ -1,13 +1,15 @@
-feat: Etapa 5 - Pantalla Tu salud y correcciones de onboarding
+feat: Etapa 5 - Mi evolución de laboratorio (Imagen Y)
 
-- Nueva pantalla HealthScreen con 5 grupos plegables (General, Digestivo, Hormonal, Tiroides y cirugías, Otras enfermedades autoinmunes)
-- Chips excluyentes 'Ninguna' y 'No lo sé'
-- Campo de texto 'Otra condición o medicamento' (máx 120 caracteres)
-- Botón 'Continuar' anclado al pie
-- HealthPreference entidad de dominio con flags y otherNote
-- HealthViewModel para manejar selección de opciones
-- OnboardingStep1Screen: quitó opciones de salud, agregó nota 'Podrás cambiar estos datos en Ajustes.'
-- OnboardingStep2Screen: cambió a 'Paso 3 de 3', corrigió Switch con track accent y thumb blanco
-- ThyroidApp.kt: navegación de 3 pasos (onboardingStep1 -> healthScreen -> onboardingStep2)
-- Barra de progreso de 3 segmentos en pantallas de onboarding
+- LabTrendEntry entidad de dominio para historial de laboratorio
+- LabTrendDao y LabTrendRepository para persistencia
+- LabTrendViewModel con lógica de tendencias
+- LabTrendScreen con gráfico de línea Canvas basado en Imagen Y
+  - Selector de laboratorio (TSH, FT4 libre, FT3 libre, Anti-TPO)
+  - Gráfico de línea con puntos y rangos de referencia
+  - Último resultado con estado
+  - Cambios de dosis
+  - Botón 'Agregar resultado'
+- AppDatabase versión 5 con LabTrendEntry
+- DatabaseModule y RepositoryModule actualizados
+- ThyroidApp.kt: ruta trends agregada
 - Colores verde salvia según diseno-thyroid-support.md
