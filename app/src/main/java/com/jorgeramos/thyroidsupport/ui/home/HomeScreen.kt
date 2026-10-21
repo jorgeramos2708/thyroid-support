@@ -2,18 +2,25 @@ package com.jorgeramos.thyroidsupport.ui.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.items as lazyItems
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items as gridItems
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.jorgeramos.thyroidsupport.presentation.home.HomeViewModel
-import kotlinx.coroutines.flow.collectAsState
+import com.jorgeramos.thyroidsupport.presentation.home.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,11 +35,11 @@ fun HomeScreen(
     onNavigateToMedication: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val weekDays by viewModel.currentWeek.collectAsState()
-    val nextDose by viewModel.nextDose.collectAsState()
-    val todayItems by viewModel.todayItems.collectAsState()
-    val nextControl by viewModel.nextControl.collectAsState()
-    val quickActions by viewModel.quickActions.collectAsState()
+    val weekDays by viewModel.currentWeek.observeAsState(emptyList())
+    val nextDose by viewModel.nextDose.observeAsState()
+    val todayItems by viewModel.todayItems.observeAsState(emptyList())
+    val nextControl by viewModel.nextControl.observeAsState()
+    val quickActions by viewModel.quickActions.observeAsState(emptyList())
 
     Scaffold(
         topBar = {
@@ -95,14 +102,14 @@ fun HomeScreen(
 
 @Composable
 fun WeekCalendar(
-    days: List<HomeViewModel.WeekDay>,
-    onDaySelected: (HomeViewModel.WeekDay) -> Unit
+    days: List<WeekDay>,
+    onDaySelected: (WeekDay) -> Unit
 ) {
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(days) { day ->
+        lazyItems(days) { day: WeekDay ->
             WeekDayItem(
                 day = day,
                 isSelected = day.isSelected,
@@ -115,7 +122,7 @@ fun WeekCalendar(
 
 @Composable
 fun WeekDayItem(
-    day: HomeViewModel.WeekDay,
+    day: WeekDay,
     isSelected: Boolean,
     isToday: Boolean,
     onClick: () -> Unit
@@ -135,7 +142,6 @@ fun WeekDayItem(
         Box(
             modifier = Modifier
                 .size(36.dp)
-                .align(Alignment.Center)
                 .background(
                     if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
                     shape = MaterialTheme.shapes.large
@@ -144,9 +150,10 @@ fun WeekDayItem(
             Text(
                 text = day.number.toString(),
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    fontWeight = androidx.compose.ui.text.FontWeight.Bold
+                    fontWeight = FontWeight.Bold
                 ),
-                color = if (isSelected || isToday) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+                color = if (isSelected || isToday) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.align(Alignment.Center)
             )
         }
     }
@@ -154,7 +161,7 @@ fun WeekDayItem(
 
 @Composable
 fun NextDoseCard(
-    dose: HomeViewModel.NextDose?,
+    dose: NextDose?,
     onMarkTaken: () -> Unit
 ) {
     dose?.let { d ->
@@ -230,7 +237,7 @@ fun NextDoseCard(
 }
 
 @Composable
-fun TodaySection(items: List<HomeViewModel.TodayItem>) {
+fun TodaySection(items: List<TodayItem>) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -249,49 +256,53 @@ fun TodaySection(items: List<HomeViewModel.TodayItem>) {
 }
 
 @Composable
-fun TodayItemRow(item: HomeViewModel.TodayItem) {
-    Row(
+fun TodayItemRow(item: TodayItem) {
+    Column(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Icon(
-            imageVector = when (item.icon) {
-                "leaf" -> Icons.Default.FoodBank
-                "attachment" -> Icons.Default.Attachment
-                else -> Icons.Default.Schedule
-            },
-            contentDescription = item.title,
-            modifier = Modifier.size(24.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
-        Column(
-            modifier = Modifier.weight(1f).padding(start = 12.dp)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = item.title,
-                style = MaterialTheme.typography.bodyLarge
+            Icon(
+                imageVector = when (item.icon) {
+                    "leaf" -> Icons.Default.FoodBank
+                    "attachment" -> Icons.Default.Attachment
+                    else -> Icons.Default.Schedule
+                },
+                contentDescription = item.title,
+                modifier = Modifier.size(24.dp),
+                tint = MaterialTheme.colorScheme.primary
             )
+            Column(
+                modifier = Modifier.weight(1f).padding(start = 12.dp)
+            ) {
+                Text(
+                    text = item.title,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    text = item.subtitle,
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                )
+            }
             Text(
-                text = item.subtitle,
-                style = MaterialTheme.typography.bodySmall.copy(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                text = item.time,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.Bold
                 )
             )
         }
-        Text(
-            text = item.time,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontWeight = androidx.compose.ui.text.FontWeight.Bold
-            )
-        )
+        Divider(modifier = Modifier.fillMaxWidth())
     }
-
-    Divider(modifier = Modifier.fillMaxWidth())
 }
 
 @Composable
 fun NextControlCard(
-    control: HomeViewModel.NextControl?
+    control: NextControl?
 ) {
     control?.let { c ->
         Card(
@@ -316,7 +327,7 @@ fun NextControlCard(
                         text = "PRÓXIMO CONTROL",
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = MaterialTheme.colorScheme.primary,
-                            fontWeight = androidx.compose.ui.text.FontWeight.Bold
+                            fontWeight = FontWeight.Bold
                         ),
                         modifier = Modifier.weight(1f).padding(start = 8.dp)
                     )
@@ -336,7 +347,7 @@ fun NextControlCard(
 }
 
 @Composable
-fun QuickActionsGrid(actions: List<HomeViewModel.QuickAction>) {
+fun QuickActionsGrid(actions: List<QuickAction>) {
     Text(
         text = "TODO LO DEMÁS",
         style = MaterialTheme.typography.bodyMedium.copy(
@@ -347,11 +358,11 @@ fun QuickActionsGrid(actions: List<HomeViewModel.QuickAction>) {
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().height(180.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        items(actions) { action ->
+        gridItems(actions) { action: QuickAction ->
             QuickActionItem(
                 label = action.label,
                 icon = when (action.icon) {

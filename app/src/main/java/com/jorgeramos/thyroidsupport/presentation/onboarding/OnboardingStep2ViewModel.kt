@@ -1,9 +1,9 @@
 package com.jorgeramos.thyroidsupport.presentation.onboarding
 
-import androidx.hilt.lifecycle.HiltViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,10 +23,10 @@ data class TreatmentSetup(
 class OnboardingStep2ViewModel @Inject constructor() : ViewModel() {
 
     private val _treatment = MutableLiveData<TreatmentSetup>(TreatmentSetup())
-    val treatment = _treatment.asLiveData()
+    val treatment: LiveData<TreatmentSetup> = _treatment
 
     private val _isValid = MutableLiveData(false)
-    val isValid = _isValid.asLiveData()
+    val isValid: LiveData<Boolean> = _isValid
 
     init {
         validate()
@@ -79,8 +79,9 @@ class OnboardingStep2ViewModel @Inject constructor() : ViewModel() {
 
     private fun validate() {
         val treatment = _treatment.value
-        _isValid.value = treatment?.medicationName.isNotEmpty() == true &&
-            treatment?.dose.isNotEmpty() == true &&
-            treatment?.time.isNotEmpty() == true
+        _isValid.value = treatment != null &&
+            treatment.medicationName.isNotBlank() &&
+            treatment.dose.isNotBlank() &&
+            treatment.time.isNotBlank()
     }
 }

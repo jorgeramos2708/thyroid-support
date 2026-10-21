@@ -1,10 +1,10 @@
 package com.jorgeramos.thyroidsupport.presentation.home
 
-import androidx.hilt.lifecycle.HiltViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -46,19 +46,19 @@ data class QuickAction(
 class HomeViewModel @Inject constructor() : ViewModel() {
 
     private val _currentWeek = MutableLiveData<List<WeekDay>>(emptyList())
-    val currentWeek = _currentWeek.asLiveData()
+    val currentWeek: LiveData<List<WeekDay>> = _currentWeek
 
     private val _nextDose = MutableLiveData<NextDose?>(null)
-    val nextDose = _nextDose.asLiveData()
+    val nextDose: LiveData<NextDose?> = _nextDose
 
     private val _todayItems = MutableLiveData<List<TodayItem>>(emptyList())
-    val todayItems = _todayItems.asLiveData()
+    val todayItems: LiveData<List<TodayItem>> = _todayItems
 
     private val _nextControl = MutableLiveData<NextControl?>(null)
-    val nextControl = _nextControl.asLiveData()
+    val nextControl: LiveData<NextControl?> = _nextControl
 
     private val _quickActions = MutableLiveData<List<QuickAction>>(emptyList())
-    val quickActions = _quickActions.asLiveData()
+    val quickActions: LiveData<List<QuickAction>> = _quickActions
 
     init {
         setupWeek()

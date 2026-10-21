@@ -1,17 +1,22 @@
 package com.jorgeramos.thyroidsupport.ui.onboarding
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.jorgeramos.thyroidsupport.presentation.onboarding.Condition
+import com.jorgeramos.thyroidsupport.presentation.onboarding.ConditionSubtype
+import com.jorgeramos.thyroidsupport.presentation.onboarding.ConditionType
 import com.jorgeramos.thyroidsupport.presentation.onboarding.OnboardingStep1ViewModel
 import kotlinx.coroutines.launch
 
@@ -23,7 +28,10 @@ fun OnboardingStep1Screen(
     viewModel: OnboardingStep1ViewModel = hiltViewModel()
 ) {
     val profile by viewModel.profile.observeAsState()
-    val selectedCondition by viewModel.selectedCondition.observeAsState()
+    val conditionType by viewModel.selectedConditionType.observeAsState()
+    val conditionSubtype by viewModel.selectedConditionSubtype.observeAsState()
+    val availableSubtypes by viewModel.availableSubtypes.observeAsState(emptyList())
+    val showSubtypeSelection by viewModel.showSubtypeSelection.observeAsState(false)
     val isValid by viewModel.isValid.observeAsState(false)
 
     var name by remember { mutableStateOf(profile?.name ?: "") }
@@ -94,23 +102,57 @@ fun OnboardingStep1Screen(
             )
         )
 
-        ConditionOption(
-            condition = Condition.HYPOTHYROIDISM,
-            isSelected = selectedCondition == Condition.HYPOTHYROIDISM,
-            onClick = { viewModel.selectCondition(Condition.HYPOTHYROIDISM) }
+        ConditionTypeOption(
+            conditionType = ConditionType.HYPOTHYROIDISM,
+            isSelected = conditionType == ConditionType.HYPOTHYROIDISM,
+            onClick = { viewModel.selectConditionType(ConditionType.HYPOTHYROIDISM) }
         )
 
-        ConditionOption(
-            condition = Condition.HYPERTHYROIDISM,
-            isSelected = selectedCondition == Condition.HYPERTHYROIDISM,
-            onClick = { viewModel.selectCondition(Condition.HYPERTHYROIDISM) }
+        ConditionTypeOption(
+            conditionType = ConditionType.HYPERTHYROIDISM,
+            isSelected = conditionType == ConditionType.HYPERTHYROIDISM,
+            onClick = { viewModel.selectConditionType(ConditionType.HYPERTHYROIDISM) }
         )
 
-        ConditionOption(
-            condition = Condition.OTHER,
-            isSelected = selectedCondition == Condition.OTHER,
-            onClick = { viewModel.selectCondition(Condition.OTHER) }
+        ConditionTypeOption(
+            conditionType = ConditionType.OTHER,
+            isSelected = conditionType == ConditionType.OTHER,
+            onClick = { viewModel.selectConditionType(ConditionType.OTHER) }
         )
+
+        // Subtype selection shown only when Hypothyroidism or Hyperthyroidism is selected
+        if (showSubtypeSelection && availableSubtypes.isNotEmpty()) {
+            Text(
+                text = "TIPO DE ${conditionType?.title?.uppercase()}",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.primary
+                )
+            )
+
+            ConditionSubtypeOption(
+                subtype = availableSubtypes[0],
+                isSelected = conditionSubtype == availableSubtypes[0],
+                onClick = { viewModel.selectConditionSubtype(availableSubtypes[0]) },
+                description = availableSubtypes[0].description
+            )
+
+            availableSubtypes.drop(1).forEach { subtype ->
+                ConditionSubtypeOption(
+                    subtype = subtype,
+                    isSelected = conditionSubtype == subtype,
+                    onClick = { viewModel.selectConditionSubtype(subtype) },
+                    description = subtype.description
+                )
+            }
+        }
+
+        if (conditionType == ConditionType.OTHER) {
+            Text(
+                text = "Seleccionaste 'Otra o no lo sé'. Verás consejos generales adaptados a tu perfil.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
 
         Text(
             text = "¿ALGO DE ESTO APLICA?",
@@ -157,7 +199,7 @@ fun OnboardingStep1Screen(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = "Continuar")
                 Icon(
@@ -171,8 +213,8 @@ fun OnboardingStep1Screen(
 }
 
 @Composable
-fun ConditionOption(
-    condition: Condition,
+fun ConditionTypeOption(
+    conditionType: ConditionType,
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
@@ -185,7 +227,7 @@ fun ConditionOption(
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically
         ) {
             RadioButton(
                 selected = isSelected,
@@ -199,16 +241,61 @@ fun ConditionOption(
                 modifier = Modifier.weight(1f).padding(start = 12.dp)
             ) {
                 Text(
-                    text = condition.title,
+                    text = conditionType.title,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
-                    text = condition.subtitle,
+                    text = conditionType.subtitle,
                     style = MaterialTheme.typography.bodySmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun ConditionSubtypeOption(
+    subtype: ConditionSubtype,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    description: String
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth().clickable { onClick() },
+        colors = CardDefaults.cardColors(
+            containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f) else MaterialTheme.colorScheme.surface
+        ),
+        shape = MaterialTheme.shapes.large
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                RadioButton(
+                    selected = isSelected,
+                    onClick = { onClick() },
+                    colors = RadioButtonDefaults.colors(
+                        selectedColor = MaterialTheme.colorScheme.primary,
+                        unselectedColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                )
+                Text(
+                    text = subtype.title,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+            Text(
+                text = description,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                ),
+                modifier = Modifier.padding(top = 8.dp)
+            )
         }
     }
 }
@@ -221,7 +308,7 @@ fun CheckboxRow(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Checkbox(
             checked = checked,

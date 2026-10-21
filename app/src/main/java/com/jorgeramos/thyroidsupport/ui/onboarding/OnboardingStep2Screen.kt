@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -100,7 +101,7 @@ fun OnboardingStep2Screen(
                 },
                 label = { Text("Hora") },
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Time
+                    keyboardType = KeyboardType.Text
                 ),
                 modifier = Modifier.weight(1f)
             )
@@ -112,11 +113,7 @@ fun OnboardingStep2Screen(
         ) {
             Switch(
                 checked = dailyReminder,
-                onCheckedChange = { dailyReminder = it; viewModel.toggleDailyReminder(it) },
-                colors = SwitchDefaults.colors(
-                    checkedColor = MaterialTheme.colorScheme.primary,
-                    uncheckedColor = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                onCheckedChange = { dailyReminder = it; viewModel.toggleDailyReminder(it) }
             )
             Text(
                 text = "Recordatorio diario",
