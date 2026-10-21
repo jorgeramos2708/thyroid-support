@@ -1,26 +1,30 @@
 package com.jorgeramos.thyroidsupport.ui.onboarding
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jorgeramos.thyroidsupport.presentation.onboarding.ConditionType
 import com.jorgeramos.thyroidsupport.presentation.onboarding.OnboardingStep1ViewModel
+import com.jorgeramos.thyroidsupport.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,7 +44,8 @@ fun OnboardingStep1Screen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp, top = 24.dp)
+            .padding(horizontal = 20.dp)
+            .padding(top = 24.dp)
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
@@ -257,7 +262,7 @@ fun ConditionTypeCard(
             containerColor = if (isSelected) MaterialTheme.colorScheme.tint else MaterialTheme.colorScheme.card
         ),
         shape = RoundedCornerShape(22.dp),
-        elevation = 0.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         border = if (isSelected) BorderStroke(2.dp, MaterialTheme.colorScheme.accent) else BorderStroke(1.dp, MaterialTheme.colorScheme.line)
     ) {
         Row(
@@ -324,7 +329,7 @@ fun ExpandedTextField(
     onValueChange: (String) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
-    keyboardOptions: KeyboardOptions? = null
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     Column(
         modifier = modifier
@@ -335,7 +340,7 @@ fun ExpandedTextField(
             label = { Text(label) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(18.dp),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
+            colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.accent,
                 unfocusedBorderColor = MaterialTheme.colorScheme.line
             ),
