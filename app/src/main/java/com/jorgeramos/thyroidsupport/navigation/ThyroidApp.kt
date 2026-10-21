@@ -39,9 +39,17 @@ fun ThyroidApp(navController: NavHostController = rememberNavController()) {
             composable("onboardingStep1") {
                 OnboardingStep1Screen(
                     onNext = {
-                        navController.navigate("conditionSubtype")
+                        // Si es "Otra", ir directo a Paso 2
+                        navController.navigate("onboardingStep2") {
+                            popUpTo("onboardingStep1") { inclusive = false }
+                        }
                     },
-                    onBack = {}
+                    onBack = {},
+                    onNavigateToSubtype = {
+                        navController.navigate("conditionSubtype") {
+                            popUpTo("onboardingStep1") { inclusive = false }
+                        }
+                    }
                 )
             }
             composable("conditionSubtype") {

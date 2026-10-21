@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 fun OnboardingStep1Screen(
     onNext: () -> Unit,
     onBack: () -> Unit,
+    onNavigateToSubtype: () -> Unit,
     viewModel: OnboardingStep1ViewModel = hiltViewModel()
 ) {
     val profile by viewModel.profile.observeAsState()
@@ -47,9 +48,8 @@ fun OnboardingStep1Screen(
         TopAppBar(
             title = { Text("Tu perfil") },
             navigationIcon = {
-                // Paso 1: no hay pantalla anterior, deshabilitar flecha
                 IconButton(
-                    onClick = {},
+                    onClick = onBack,
                     enabled = false
                 ) {
                     Icon(
@@ -108,13 +108,19 @@ fun OnboardingStep1Screen(
         ConditionTypeOption(
             conditionType = ConditionType.HYPOTHYROIDISM,
             isSelected = conditionType == ConditionType.HYPOTHYROIDISM,
-            onClick = { viewModel.selectConditionType(ConditionType.HYPOTHYROIDISM) }
+            onClick = {
+                viewModel.selectConditionType(ConditionType.HYPOTHYROIDISM)
+                onNavigateToSubtype()
+            }
         )
 
         ConditionTypeOption(
             conditionType = ConditionType.HYPERTHYROIDISM,
             isSelected = conditionType == ConditionType.HYPERTHYROIDISM,
-            onClick = { viewModel.selectConditionType(ConditionType.HYPERTHYROIDISM) }
+            onClick = {
+                viewModel.selectConditionType(ConditionType.HYPERTHYROIDISM)
+                onNavigateToSubtype()
+            }
         )
 
         ConditionTypeOption(
