@@ -1,7 +1,13 @@
-fix: Tipografía y espaciado en pantallas de onboarding
+feat: Etapa 5 - Pantalla Tu salud y correcciones de onboarding
 
-- Solo 'Tu perfil' y 'Tu tratamiento' usan Fraunces (headlineMedium)
-- 'CONDICIÓN' y todo el resto usa Roboto
-- Botón 'Continuar' más elevado (menos espacio arriba)
-- Espaciado consistente: 20dp horizontal, 24dp top, 14dp entre bloques
-- Campos con fondo lleno (tint) y borde accent
+- Nueva pantalla HealthScreen con 5 grupos plegables (General, Digestivo, Hormonal, Tiroides y cirugías, Otras enfermedades autoinmunes)
+- Chips excluyentes 'Ninguna' y 'No lo sé'
+- Campo de texto 'Otra condición o medicamento' (máx 120 caracteres)
+- Botón 'Continuar' anclado al pie
+- HealthPreference entidad de dominio con flags y otherNote
+- HealthViewModel para manejar selección de opciones
+- OnboardingStep1Screen: quitó opciones de salud, agregó nota 'Podrás cambiar estos datos en Ajustes.'
+- OnboardingStep2Screen: cambió a 'Paso 3 de 3', corrigió Switch con track accent y thumb blanco
+- ThyroidApp.kt: navegación de 3 pasos (onboardingStep1 -> healthScreen -> onboardingStep2)
+- Barra de progreso de 3 segmentos en pantallas de onboarding
+- Colores verde salvia según diseno-thyroid-support.md

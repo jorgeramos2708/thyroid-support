@@ -1,20 +1,29 @@
 package com.jorgeramos.thyroidsupport.ui.onboarding
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jorgeramos.thyroidsupport.presentation.onboarding.OnboardingStep2ViewModel
+import com.jorgeramos.thyroidsupport.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,7 +47,8 @@ fun OnboardingStep2Screen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp, top = 24.dp)
+            .padding(horizontal = 20.dp)
+            .padding(top = 24.dp)
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
@@ -73,15 +83,18 @@ fun OnboardingStep2Screen(
                     .background(MaterialTheme.colorScheme.card, shape = RoundedCornerShape(24.dp))
                     .border(1.dp, MaterialTheme.colorScheme.accent, shape = RoundedCornerShape(24.dp))
             ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Volver",
-                    modifier = Modifier.size(20.dp),
-                    tint = MaterialTheme.colorScheme.ink
-                )
+                IconButton(onClick = onBack) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Volver",
+                        modifier = Modifier.size(20.dp),
+                        tint = MaterialTheme.colorScheme.ink
+                    )
+                }
             }
+            Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = "Paso 2 de 2",
+                text = "Paso 3 de 3",
                 style = MaterialTheme.typography.labelSmall.copy(
                     fontWeight = FontWeight(600)
                 ),
@@ -113,7 +126,7 @@ fun OnboardingStep2Screen(
                 containerColor = MaterialTheme.colorScheme.card
             ),
             shape = RoundedCornerShape(18.dp),
-            elevation = 0.dp
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -133,7 +146,7 @@ fun OnboardingStep2Screen(
                     label = { Text("Levotiroxina") },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(18.dp),
-                    colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
+                    colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = MaterialTheme.colorScheme.accent,
                         unfocusedBorderColor = MaterialTheme.colorScheme.line
                     )
@@ -161,7 +174,7 @@ fun OnboardingStep2Screen(
                         label = "Hora",
                         modifier = Modifier.weight(1f),
                         keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Time
+                            keyboardType = KeyboardType.Text
                         )
                     )
                 }
@@ -183,8 +196,10 @@ fun OnboardingStep2Screen(
                 checked = dailyReminder,
                 onCheckedChange = { dailyReminder = it; viewModel.toggleDailyReminder(it) },
                 colors = SwitchDefaults.colors(
-                    checkedColor = MaterialTheme.colorScheme.accent,
-                    uncheckedColor = MaterialTheme.colorScheme.line
+                    checkedTrackColor = MaterialTheme.colorScheme.accent,
+                    checkedThumbColor = Color(0xFFFFFFFF),
+                    uncheckedTrackColor = MaterialTheme.colorScheme.line,
+                    uncheckedThumbColor = MaterialTheme.colorScheme.line
                 )
             )
         }
@@ -317,22 +332,36 @@ fun ExpandedTextField(
     Column(
         modifier = modifier
     ) {
-        androidx.compose.material3.TextField(
-            value = value,
-            onValueChange = onValueChange,
-            label = { Text(label) },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(18.dp),
-            colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
-                backgroundColor = MaterialTheme.colorScheme.tint,
-                focusedBackgroundColor = MaterialTheme.colorScheme.tint,
-                unfocusedBackgroundColor = MaterialTheme.colorScheme.tint,
-                focusedLineColor = MaterialTheme.colorScheme.accent,
-                unfocusedLineColor = MaterialTheme.colorScheme.line,
-                textColor = MaterialTheme.colorScheme.ink,
-                labelColor = MaterialTheme.colorScheme.inkSecondary
-            ),
-            keyboardOptions = keyboardOptions
+        val colors = TextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.tint,
+            unfocusedContainerColor = MaterialTheme.colorScheme.tint,
+            disabledContainerColor = MaterialTheme.colorScheme.tint,
+            focusedIndicatorColor = MaterialTheme.colorScheme.accent,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.line,
+            focusedTextColor = MaterialTheme.colorScheme.ink,
+            unfocusedTextColor = MaterialTheme.colorScheme.ink,
+            focusedLabelColor = MaterialTheme.colorScheme.inkSecondary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.inkSecondary
         )
+        if (keyboardOptions != null) {
+            TextField(
+                value = value,
+                onValueChange = onValueChange,
+                label = { Text(label) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(18.dp),
+                colors = colors,
+                keyboardOptions = keyboardOptions
+            )
+        } else {
+            TextField(
+                value = value,
+                onValueChange = onValueChange,
+                label = { Text(label) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(18.dp),
+                colors = colors
+            )
+        }
     }
 }

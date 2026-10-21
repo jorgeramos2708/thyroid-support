@@ -10,10 +10,7 @@ data class PatientProfile(
     val name: String = "",
     val birthYear: Int? = null,
     val conditionType: ConditionType? = null,
-    val conditionSubtype: ConditionSubtype? = null,
-    val hasPregnancy: Boolean = false,
-    val hasHeartProblems: Boolean = false,
-    val hasOsteoporosis: Boolean = false
+    val conditionSubtype: ConditionSubtype? = null
 )
 
 enum class ConditionType(
@@ -166,21 +163,6 @@ class OnboardingStep1ViewModel @Inject constructor() : ViewModel() {
             conditionSubtype = _selectedConditionSubtype.value
         )
         validate()
-    }
-
-    fun togglePregnancy(checked: Boolean) {
-        val current = _profile.value ?: PatientProfile()
-        _profile.value = current.copy(hasPregnancy = checked)
-    }
-
-    fun toggleHeartProblems(checked: Boolean) {
-        val current = _profile.value ?: PatientProfile()
-        _profile.value = current.copy(hasHeartProblems = checked)
-    }
-
-    fun toggleOsteoporosis(checked: Boolean) {
-        val current = _profile.value ?: PatientProfile()
-        _profile.value = current.copy(hasOsteoporosis = checked)
     }
 
     private fun validate() {

@@ -23,6 +23,7 @@ import com.jorgeramos.thyroidsupport.ui.SettingsScreen
 import com.jorgeramos.thyroidsupport.ui.SymptomLogScreen
 import com.jorgeramos.thyroidsupport.ui.home.HomeScreen
 import com.jorgeramos.thyroidsupport.ui.onboarding.ConditionSubtypeScreen
+import com.jorgeramos.thyroidsupport.ui.onboarding.HealthScreen
 import com.jorgeramos.thyroidsupport.ui.onboarding.OnboardingStep1Screen
 import com.jorgeramos.thyroidsupport.ui.onboarding.OnboardingStep2Screen
 
@@ -36,12 +37,12 @@ fun ThyroidApp(navController: NavHostController = rememberNavController()) {
             startDestination = "onboardingStep1",
             modifier = Modifier.padding(padding)
         ) {
-            // Onboarding
+            // Onboarding - 3 pasos
             composable("onboardingStep1") {
                 OnboardingStep1Screen(
                     onNext = {
-                        // Si es "Otra", ir directo a Paso 2
-                        navController.navigate("onboardingStep2") {
+                        // Siempre ir a healthScreen (paso 2)
+                        navController.navigate("healthScreen") {
                             popUpTo("onboardingStep1") { inclusive = false }
                         }
                     },
@@ -55,6 +56,18 @@ fun ThyroidApp(navController: NavHostController = rememberNavController()) {
             }
             composable("conditionSubtype") {
                 ConditionSubtypeScreen(
+                    onNext = {
+                        navController.navigate("healthScreen") {
+                            popUpTo("onboardingStep1") { inclusive = false }
+                        }
+                    },
+                    onBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+            composable("healthScreen") {
+                HealthScreen(
                     onNext = {
                         navController.navigate("onboardingStep2") {
                             popUpTo("onboardingStep1") { inclusive = false }

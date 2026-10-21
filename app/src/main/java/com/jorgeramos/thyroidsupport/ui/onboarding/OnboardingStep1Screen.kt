@@ -16,6 +16,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -40,11 +41,11 @@ fun OnboardingStep1Screen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp, top = 20.dp)
+            .padding(horizontal = 20.dp, top = 24.dp)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        // Barra de progreso (dos segmentos: accent y tint)
+        // Barra de progreso (dos segmentos: primero en accent)
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -62,10 +63,17 @@ fun OnboardingStep1Screen(
                     .height(6.dp)
                     .background(MaterialTheme.colorScheme.tint, shape = RoundedCornerShape(3.dp))
             )
+            Spacer(modifier = Modifier.width(4.dp))
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(6.dp)
+                    .background(MaterialTheme.colorScheme.tint, shape = RoundedCornerShape(3.dp))
+            )
         }
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Encabezado con flecha de volver en círculo y título "Paso 1 de 2"
+        // Encabezado con flecha de volver en círculo y título "Paso 1 de 3"
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -75,15 +83,20 @@ fun OnboardingStep1Screen(
                     .background(MaterialTheme.colorScheme.card, shape = RoundedCornerShape(24.dp))
                     .border(1.dp, MaterialTheme.colorScheme.accent, shape = RoundedCornerShape(24.dp))
             ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Volver",
-                    modifier = Modifier.size(20.dp),
-                    tint = MaterialTheme.colorScheme.ink
-                )
+                IconButton(
+                    onClick = onBack,
+                    enabled = false
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Volver",
+                        modifier = Modifier.size(20.dp),
+                        tint = MaterialTheme.colorScheme.ink
+                    )
+                }
             }
             Text(
-                text = "Paso 1 de 2",
+                text = "Paso 1 de 3",
                 style = MaterialTheme.typography.labelSmall.copy(
                     fontWeight = FontWeight(600)
                 ),
@@ -163,59 +176,15 @@ fun OnboardingStep1Screen(
             onClick = { viewModel.selectConditionType(ConditionType.OTHER) }
         )
 
-        // Etiqueta ¿ALGO DE ESTO APLICA?
-        Text(
-            text = "¿ALGO DE ESTO APLICA?",
-            style = MaterialTheme.typography.labelSmall.copy(
-                letterSpacing = 0.14.em,
-                fontWeight = FontWeight(600)
-            ),
-            color = MaterialTheme.colorScheme.accent,
-            modifier = Modifier.padding(top = 8.dp)
-        )
-
-        // Chips con forma de píldora
-        PillChip(
-            label = "Embarazo o planificación",
-            checked = profile?.hasPregnancy == true,
-            onCheckedChange = { viewModel.togglePregnancy(it) }
-        )
-
-        PillChip(
-            label = "Problemas del corazón",
-            checked = profile?.hasHeartProblems == true,
-            onCheckedChange = { viewModel.toggleHeartProblems(it) }
-        )
-
-        PillChip(
-            label = "Osteoporosis",
-            checked = profile?.hasOsteoporosis == true,
-            onCheckedChange = { viewModel.toggleOsteoporosis(it) }
-        )
-
-        PillChip(
-            label = "Ninguna",
-            checked = profile?.hasPregnancy == false &&
-                profile?.hasHeartProblems == false &&
-                profile?.hasOsteoporosis == false,
-            onCheckedChange = { checked ->
-                if (checked) {
-                    viewModel.togglePregnancy(false)
-                    viewModel.toggleHeartProblems(false)
-                    viewModel.toggleOsteoporosis(false)
-                }
-            }
-        )
-
         // Nota al pie
         Text(
-            text = "Esto adapta los ejercicios y consejos que ves. Siempre sigue las indicaciones de tu médico.",
+            text = "Podrás cambiar estos datos en Ajustes.",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.inkSecondary,
             modifier = Modifier.padding(top = 8.dp)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         // Botón "Continuar" verde anclado al fondo
         Button(
@@ -291,34 +260,6 @@ fun ConditionTypeCard(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun PillChip(
-    label: String,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Checkbox(
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-            colors = CheckboxDefaults.colors(
-                checkedColor = MaterialTheme.colorScheme.accent,
-                uncheckedColor = MaterialTheme.colorScheme.line
-            ),
-            modifier = Modifier.size(24.dp)
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.ink,
-            modifier = Modifier.weight(1f).padding(start = 12.dp)
-        )
     }
 }
 
