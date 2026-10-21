@@ -21,6 +21,7 @@ import com.jorgeramos.thyroidsupport.ui.RecommendationScreen
 import com.jorgeramos.thyroidsupport.ui.SettingsScreen
 import com.jorgeramos.thyroidsupport.ui.SymptomLogScreen
 import com.jorgeramos.thyroidsupport.ui.home.HomeScreen
+import com.jorgeramos.thyroidsupport.ui.onboarding.ConditionSubtypeScreen
 import com.jorgeramos.thyroidsupport.ui.onboarding.OnboardingStep1Screen
 import com.jorgeramos.thyroidsupport.ui.onboarding.OnboardingStep2Screen
 
@@ -38,9 +39,21 @@ fun ThyroidApp(navController: NavHostController = rememberNavController()) {
             composable("onboardingStep1") {
                 OnboardingStep1Screen(
                     onNext = {
-                        navController.navigate("onboardingStep2")
+                        navController.navigate("conditionSubtype")
                     },
                     onBack = {}
+                )
+            }
+            composable("conditionSubtype") {
+                ConditionSubtypeScreen(
+                    onNext = {
+                        navController.navigate("onboardingStep2") {
+                            popUpTo("onboardingStep1") { inclusive = false }
+                        }
+                    },
+                    onBack = {
+                        navController.popBackStack()
+                    }
                 )
             }
             composable("onboardingStep2") {

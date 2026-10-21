@@ -1,6 +1,8 @@
 package com.jorgeramos.thyroidsupport.ui.onboarding
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -15,7 +17,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.jorgeramos.thyroidsupport.presentation.onboarding.ConditionSubtype
 import com.jorgeramos.thyroidsupport.presentation.onboarding.ConditionType
 import com.jorgeramos.thyroidsupport.presentation.onboarding.OnboardingStep1ViewModel
 import kotlinx.coroutines.launch
@@ -29,9 +30,6 @@ fun OnboardingStep1Screen(
 ) {
     val profile by viewModel.profile.observeAsState()
     val conditionType by viewModel.selectedConditionType.observeAsState()
-    val conditionSubtype by viewModel.selectedConditionSubtype.observeAsState()
-    val availableSubtypes by viewModel.availableSubtypes.observeAsState(emptyList())
-    val showSubtypeSelection by viewModel.showSubtypeSelection.observeAsState(false)
     val isValid by viewModel.isValid.observeAsState(false)
 
     var name by remember { mutableStateOf(profile?.name ?: "") }
@@ -42,13 +40,18 @@ fun OnboardingStep1Screen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         TopAppBar(
             title = { Text("Tu perfil") },
             navigationIcon = {
-                IconButton(onClick = onBack) {
+                // Paso 1: no hay pantalla anterior, deshabilitar flecha
+                IconButton(
+                    onClick = {},
+                    enabled = false
+                ) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Volver"
@@ -119,32 +122,6 @@ fun OnboardingStep1Screen(
             isSelected = conditionType == ConditionType.OTHER,
             onClick = { viewModel.selectConditionType(ConditionType.OTHER) }
         )
-
-        // Subtype selection shown only when Hypothyroidism or Hyperthyroidism is selected
-        if (showSubtypeSelection && availableSubtypes.isNotEmpty()) {
-            Text(
-                text = "TIPO DE ${conditionType?.title?.uppercase()}",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.primary
-                )
-            )
-
-            ConditionSubtypeOption(
-                subtype = availableSubtypes[0],
-                isSelected = conditionSubtype == availableSubtypes[0],
-                onClick = { viewModel.selectConditionSubtype(availableSubtypes[0]) },
-                description = availableSubtypes[0].description
-            )
-
-            availableSubtypes.drop(1).forEach { subtype ->
-                ConditionSubtypeOption(
-                    subtype = subtype,
-                    isSelected = conditionSubtype == subtype,
-                    onClick = { viewModel.selectConditionSubtype(subtype) },
-                    description = subtype.description
-                )
-            }
-        }
 
         if (conditionType == ConditionType.OTHER) {
             Text(
@@ -251,51 +228,6 @@ fun ConditionTypeOption(
                     )
                 )
             }
-        }
-    }
-}
-
-@Composable
-fun ConditionSubtypeOption(
-    subtype: ConditionSubtype,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-    description: String
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth().clickable { onClick() },
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f) else MaterialTheme.colorScheme.surface
-        ),
-        shape = MaterialTheme.shapes.large
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                RadioButton(
-                    selected = isSelected,
-                    onClick = { onClick() },
-                    colors = RadioButtonDefaults.colors(
-                        selectedColor = MaterialTheme.colorScheme.primary,
-                        unselectedColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                )
-                Text(
-                    text = subtype.title,
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
-            Text(
-                text = description,
-                style = MaterialTheme.typography.bodySmall.copy(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                ),
-                modifier = Modifier.padding(top = 8.dp)
-            )
         }
     }
 }

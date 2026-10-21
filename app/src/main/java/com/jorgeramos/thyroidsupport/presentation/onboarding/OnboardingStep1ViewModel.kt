@@ -2,10 +2,8 @@ package com.jorgeramos.thyroidsupport.presentation.onboarding
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class PatientProfile(
@@ -124,8 +122,9 @@ class OnboardingStep1ViewModel @Inject constructor() : ViewModel() {
 
     init {
         _selectedConditionType.value = ConditionType.HYPOTHYROIDISM
-        _availableSubtypes.value = ConditionSubtype.getSubtypesForType(ConditionType.HYPOTHYROIDISM)
-        _selectedConditionSubtype.value = _availableSubtypes.value.firstOrNull()
+        val subtypes = ConditionSubtype.getSubtypesForType(ConditionType.HYPOTHYROIDISM)
+        _availableSubtypes.value = subtypes
+        _selectedConditionSubtype.value = subtypes.firstOrNull()
         _showSubtypeSelection.value = true
         updateProfile()
     }
@@ -144,22 +143,28 @@ class OnboardingStep1ViewModel @Inject constructor() : ViewModel() {
 
     fun selectConditionType(conditionType: ConditionType) {
         _selectedConditionType.value = conditionType
-        _availableSubtypes.value = ConditionSubtype.getSubtypesForType(conditionType)
-        if (_availableSubtypes.value.isNotEmpty()) {
-            _selectedConditionSubtype.value = _availableSubtypes.value.first()
+        val subtypes = ConditionSubtype.getSubtypesForType(conditionType)
+        _availableSubtypes.value = subtypes
+        if (subtypes.isNotEmpty()) {
+            _selectedConditionSubtype.value = subtypes.first()
         } else {
             _selectedConditionSubtype.value = null
         }
         _showSubtypeSelection.value = conditionType != ConditionType.OTHER
-        val current = _profile.value ?: PatientProfile()
-        _profile.value = current.copy(conditionType = conditionType, conditionSubtype = _selectedConditionSubtype.value)
-        validate()
+        updateProfile()
     }
 
     fun selectConditionSubtype(subtype: ConditionSubtype) {
         _selectedConditionSubtype.value = subtype
+        updateProfile()
+    }
+
+    private fun updateProfile() {
         val current = _profile.value ?: PatientProfile()
-        _profile.value = current.copy(conditionSubtype = subtype)
+        _profile.value = current.copy(
+            conditionType = _selectedConditionType.value,
+            conditionSubtype = _selectedConditionSubtype.value
+        )
         validate()
     }
 
