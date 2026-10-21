@@ -1,0 +1,5 @@
+fix: Solo Tu perfil usa Fraunces, todo el resto Roboto
+
+- Corregir Theme.kt: titleLarge y titleMedium ahora usan Roboto 600 en lugar de Fraunces
+- Solo headlineMedium ('Tu perfil') usa Fraunces 600
+- Esto asegura que 'CONDICIÓN' y todo el texto excepto el título principal use Roboto

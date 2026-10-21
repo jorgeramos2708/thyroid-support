@@ -102,8 +102,8 @@ enum class ConditionSubtype(
 @HiltViewModel
 class OnboardingStep1ViewModel @Inject constructor() : ViewModel() {
 
-    private val _profile = MutableLiveData<PatientProfile>(PatientProfile())
-    val profile: LiveData<PatientProfile> = _profile
+    private val _profile = MutableLiveData<PatientProfile?>(null)
+    val profile: LiveData<PatientProfile?> = _profile
 
     private val _selectedConditionType = MutableLiveData<ConditionType?>(null)
     val selectedConditionType: LiveData<ConditionType?> = _selectedConditionType
@@ -184,9 +184,8 @@ class OnboardingStep1ViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun validate() {
-        val profile = _profile.value
-        _isValid.value = profile != null &&
-            profile.name.isNotBlank() &&
+        val profile = _profile.value ?: return
+        _isValid.value = profile.name.isNotBlank() &&
             profile.birthYear != null &&
             profile.conditionType != null &&
             (profile.conditionSubtype != null || profile.conditionType == ConditionType.OTHER)

@@ -49,13 +49,13 @@ private val LightColorScheme = lightColorScheme(
 
 private val AppTypography = androidx.compose.material3.Typography(
     titleLarge = TextStyle(
-        fontFamily = FontFamily(Font(R.font.fraunces_600)),
+        fontFamily = FontFamily(Font(R.font.roboto_600)),
         fontSize = 28.sp,
         fontWeight = FontWeight(600),
         fontStyle = FontStyle.Normal
     ),
     titleMedium = TextStyle(
-        fontFamily = FontFamily(Font(R.font.fraunces_600)),
+        fontFamily = FontFamily(Font(R.font.roboto_600)),
         fontSize = 26.sp,
         fontWeight = FontWeight(600),
         fontStyle = FontStyle.Normal
