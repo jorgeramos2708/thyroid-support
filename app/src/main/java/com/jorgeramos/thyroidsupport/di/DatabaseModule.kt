@@ -2,6 +2,7 @@ package com.jorgeramos.thyroidsupport.di
 
 import android.content.Context
 import com.jorgeramos.thyroidsupport.data.AppDatabase
+import com.jorgeramos.thyroidsupport.data.DailySymptomDao
 import com.jorgeramos.thyroidsupport.data.DiaryDao
 import com.jorgeramos.thyroidsupport.data.ExerciseDao
 import com.jorgeramos.thyroidsupport.data.LabDao
@@ -57,4 +58,8 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideDiaryDao(db: AppDatabase): DiaryDao = db.diaryDao()
+
+    @Provides
+    @Singleton
+    fun provideDailySymptomDao(db: AppDatabase): DailySymptomDao = db.dailySymptomDao()
 }

@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.jorgeramos.thyroidsupport.ui.DailySymptomScreen
 import com.jorgeramos.thyroidsupport.ui.DashboardScreen
 import com.jorgeramos.thyroidsupport.ui.DiaryScreen
 import com.jorgeramos.thyroidsupport.ui.ExerciseScreen
@@ -144,6 +145,11 @@ fun ThyroidApp(navController: NavHostController = rememberNavController()) {
             }
             composable("symptomLog") {
                 SymptomLogScreen(onNavigateBack = {
+                    navController.popBackStack()
+                })
+            }
+            composable("symptoms") {
+                DailySymptomScreen(onNavigateBack = {
                     navController.popBackStack()
                 })
             }

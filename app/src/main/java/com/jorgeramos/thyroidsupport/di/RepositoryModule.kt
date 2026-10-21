@@ -1,6 +1,7 @@
 package com.jorgeramos.thyroidsupport.di
 
 import android.content.Context
+import com.jorgeramos.thyroidsupport.data.repository.DailySymptomRepositoryImpl
 import com.jorgeramos.thyroidsupport.data.repository.DiaryRepositoryImpl
 import com.jorgeramos.thyroidsupport.data.repository.ExerciseRepositoryImpl
 import com.jorgeramos.thyroidsupport.data.repository.ExportRepositoryImpl
@@ -12,6 +13,7 @@ import com.jorgeramos.thyroidsupport.data.repository.PatientRepositoryImpl
 import com.jorgeramos.thyroidsupport.data.repository.RecommendationRepositoryImpl
 import com.jorgeramos.thyroidsupport.data.repository.SupplementRepositoryImpl
 import com.jorgeramos.thyroidsupport.data.repository.SymptomRepositoryImpl
+import com.jorgeramos.thyroidsupport.domain.repository.DailySymptomRepository
 import com.jorgeramos.thyroidsupport.domain.repository.DiaryRepository
 import com.jorgeramos.thyroidsupport.domain.repository.ExerciseRepository
 import com.jorgeramos.thyroidsupport.domain.repository.ExportRepository
@@ -65,4 +67,7 @@ object RepositoryModule {
 
     @Provides
     fun provideOpenAIService(@ApplicationContext context: Context): OpenAIService = OpenAIServiceImpl(context)
+
+    @Provides
+    fun provideDailySymptomRepository(impl: DailySymptomRepositoryImpl): DailySymptomRepository = impl
 }
