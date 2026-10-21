@@ -1,19 +1,31 @@
 package com.jorgeramos.thyroidsupport.ui
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Attachment
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jorgeramos.thyroidsupport.presentation.MedicationViewModel
-import java.text.SimpleDateFormat
-import java.util.*
+import com.jorgeramos.thyroidsupport.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,7 +35,7 @@ fun MedicationScreen(
 ) {
     val state by viewModel.medicationState.observeAsState()
     val loading by viewModel.loading.observeAsState(false)
-    val error by viewModel.error.observeAsState(false)
+    val error by viewModel.error.observeAsState()
 
     val medication = state?.medication
     val logs = state?.logs ?: emptyList()
@@ -34,7 +46,7 @@ fun MedicationScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp, top = 24.dp)
+            .padding(start = 20.dp, end = 20.dp, top = 24.dp)
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
@@ -89,7 +101,7 @@ fun MedicationScreen(
                 containerColor = MaterialTheme.colorScheme.hero
             ),
             shape = RoundedCornerShape(24.dp),
-            elevation = 0.dp
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
             Column(
                 modifier = Modifier.padding(20.dp),
@@ -114,7 +126,7 @@ fun MedicationScreen(
                         shape = RoundedCornerShape(20.dp)
                     ) {
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.wrapContentWidth(),
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -134,7 +146,7 @@ fun MedicationScreen(
                 }
 
                 Text(
-                    text = "${medication?.dose ?: "75 mcg"}",
+                    text = medication?.dose ?: "75 mcg",
                     style = MaterialTheme.typography.headlineMedium.copy(
                         fontWeight = FontWeight(500)
                     ),
@@ -142,7 +154,7 @@ fun MedicationScreen(
                 )
 
                 Text(
-                    text = "${medication?.frequency ?: "1 vez al día"} · ${medication?.startDate?.let { "en ayunas" } ?: "en ayunas"} · ${medication?.startDate?.let { "7:00 am" } ?: "7:00 am"}",
+                    text = "${medication?.frequency ?: "1 vez al día"} · ${if (medication != null) "en ayunas" else "en ayunas"} · ${if (medication != null) "7:00 am" else "7:00 am"}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.9f)
                 )
@@ -216,7 +228,7 @@ fun MedicationScreen(
                     onClick = {}
                 ) {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.wrapContentWidth(),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -249,7 +261,7 @@ fun MedicationScreen(
                 containerColor = MaterialTheme.colorScheme.tint
             ),
             shape = RoundedCornerShape(18.dp),
-            elevation = 0.dp,
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.accent)
         ) {
             Row(
@@ -389,7 +401,9 @@ fun SupplementRow(
             )
         }
         Column(
-            modifier = Modifier.weight(1f).padding(start = 12.dp)
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 12.dp)
         ) {
             Text(
                 text = name,

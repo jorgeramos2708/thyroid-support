@@ -19,6 +19,7 @@ import com.jorgeramos.thyroidsupport.domain.repository.DiaryRepository
 import com.jorgeramos.thyroidsupport.domain.repository.ExerciseRepository
 import com.jorgeramos.thyroidsupport.domain.repository.ExportRepository
 import com.jorgeramos.thyroidsupport.domain.repository.LabRepository
+import com.jorgeramos.thyroidsupport.domain.repository.MealPlanRepository
 import com.jorgeramos.thyroidsupport.domain.repository.MedicationLogRepository
 import com.jorgeramos.thyroidsupport.domain.repository.MedicationRepository
 import com.jorgeramos.thyroidsupport.domain.repository.OpenAIService

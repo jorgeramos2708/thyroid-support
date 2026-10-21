@@ -1,14 +1,14 @@
 package com.jorgeramos.thyroidsupport.presentation
 
-import androidx.hilt.lifecycle.HiltViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.MutableLiveData
 import com.jorgeramos.thyroidsupport.domain.Medication
 import com.jorgeramos.thyroidsupport.domain.MedicationLog
 import com.jorgeramos.thyroidsupport.domain.repository.MedicationLogRepository
 import com.jorgeramos.thyroidsupport.domain.repository.MedicationRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,13 +32,13 @@ class MedicationViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _medicationState = MutableLiveData<MedicationState?>(null)
-    val medicationState = _medicationState.asLiveData()
+    val medicationState: LiveData<MedicationState?> = _medicationState
 
     private val _loading = MutableLiveData(false)
-    val loading = _loading.asLiveData()
+    val loading: LiveData<Boolean> = _loading
 
     private val _error = MutableLiveData<String?>(null)
-    val error = _error.asLiveData()
+    val error: LiveData<String?> = _error
 
     fun loadMedication() {
         viewModelScope.launch {
@@ -49,7 +49,7 @@ class MedicationViewModel @Inject constructor(
                 val medication = medications.firstOrNull()
 
                 val logs = if (medication != null) {
-                    medicationLogRepository.getLogsForMedication(medication.id!!)
+                    medicationLogRepository.getLogsForMedication(medication.id)
                 } else {
                     emptyList()
                 }
@@ -102,7 +102,7 @@ class MedicationViewModel @Inject constructor(
         val dayNames = listOf("D", "L", "M", "X", "J", "V", "S")
 
         for (i in 6 downTo 0) {
-            calendar.timeInMillis = now - (i * 24 * 60 * 60 * 1000)
+            calendar.timeInMillis = now - (i * 24 * 60 * 60 * 1000L)
             val dayOfWeek = calendar.get(java.util.Calendar.DAY_OF_WEEK)
             val dayIndex = (dayOfWeek + 5) % 7
             val dayNumber = calendar.get(java.util.Calendar.DAY_OF_MONTH)

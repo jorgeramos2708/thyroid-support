@@ -1,1 +1,7 @@
-feat: Etapa 4 - Medicación con checkmarks semanales
+fix: Tipografía y espaciado en pantallas de onboarding
+
+- Solo 'Tu perfil' y 'Tu tratamiento' usan Fraunces (headlineMedium)
+- 'CONDICIÓN' y todo el resto usa Roboto
+- Botón 'Continuar' más elevado (menos espacio arriba)
+- Espaciado consistente: 20dp horizontal, 24dp top, 14dp entre bloques
+- Campos con fondo lleno (tint) y borde accent

@@ -1,36 +1,26 @@
 package com.jorgeramos.thyroidsupport.ui.onboarding
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import com.jorgeramos.thyroidsupport.presentation.onboarding.PatientProfile
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jorgeramos.thyroidsupport.presentation.onboarding.ConditionType
 import com.jorgeramos.thyroidsupport.presentation.onboarding.OnboardingStep1ViewModel
-import com.jorgeramos.thyroidsupport.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,22 +30,19 @@ fun OnboardingStep1Screen(
     onNavigateToSubtype: () -> Unit,
     viewModel: OnboardingStep1ViewModel = hiltViewModel()
 ) {
-    // Use observeAsState with an initial value to avoid the delegation issue
-    val profileState by viewModel.profile.observeAsState(initial = PatientProfile())
-    val profile = profileState ?: PatientProfile()
+    val profile by viewModel.profile.observeAsState()
     val conditionType by viewModel.selectedConditionType.observeAsState()
     val isValid by viewModel.isValid.observeAsState(false)
 
-    var name: String by remember { mutableStateOf(profile.name) }
-    var birthYear: String by remember { mutableStateOf(profile.birthYear?.toString() ?: "") }
+    var name by remember { mutableStateOf(profile?.name ?: "") }
+    var birthYear by remember { mutableStateOf(profile?.birthYear?.toString() ?: "") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp)
-            .padding(top = 24.dp)
+            .padding(horizontal = 20.dp, top = 20.dp)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         // Barra de progreso (dos segmentos: accent y tint)
         Row(
@@ -88,16 +75,13 @@ fun OnboardingStep1Screen(
                     .background(MaterialTheme.colorScheme.card, shape = RoundedCornerShape(24.dp))
                     .border(1.dp, MaterialTheme.colorScheme.accent, shape = RoundedCornerShape(24.dp))
             ) {
-                IconButton(onClick = onBack) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Volver",
-                        modifier = Modifier.size(20.dp),
-                        tint = MaterialTheme.colorScheme.ink
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Volver",
+                    modifier = Modifier.size(20.dp),
+                    tint = MaterialTheme.colorScheme.ink
+                )
             }
-            Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = "Paso 1 de 2",
                 style = MaterialTheme.typography.labelSmall.copy(
@@ -121,7 +105,7 @@ fun OnboardingStep1Screen(
             horizontalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             FilledTextField(
-                textValue = name,
+                value = name,
                 onValueChange = {
                     name = it
                     viewModel.updateName(it)
@@ -130,8 +114,8 @@ fun OnboardingStep1Screen(
                 modifier = Modifier.weight(1f)
             )
             FilledTextField(
-                textValue = birthYear,
-                onValueChange = { it: String ->
+                value = birthYear,
+                onValueChange = {
                     birthYear = it
                     viewModel.updateBirthYear(it.toIntOrNull() ?: 0)
                 },
@@ -143,11 +127,12 @@ fun OnboardingStep1Screen(
             )
         }
 
-        // Etiqueta CONDICIÓN
+        // Etiqueta CONDICIÓN - Roboto, no Fraunces
         Text(
             text = "CONDICIÓN",
             style = MaterialTheme.typography.labelSmall.copy(
-                letterSpacing = 0.14.em
+                letterSpacing = 0.14.em,
+                fontWeight = FontWeight(600)
             ),
             color = MaterialTheme.colorScheme.accent,
             modifier = Modifier.padding(top = 8.dp)
@@ -182,7 +167,8 @@ fun OnboardingStep1Screen(
         Text(
             text = "¿ALGO DE ESTO APLICA?",
             style = MaterialTheme.typography.labelSmall.copy(
-                letterSpacing = 0.14.em
+                letterSpacing = 0.14.em,
+                fontWeight = FontWeight(600)
             ),
             color = MaterialTheme.colorScheme.accent,
             modifier = Modifier.padding(top = 8.dp)
@@ -191,25 +177,27 @@ fun OnboardingStep1Screen(
         // Chips con forma de píldora
         PillChip(
             label = "Embarazo o planificación",
-            checked = profile.hasPregnancy,
+            checked = profile?.hasPregnancy == true,
             onCheckedChange = { viewModel.togglePregnancy(it) }
         )
 
         PillChip(
             label = "Problemas del corazón",
-            checked = profile.hasHeartProblems,
+            checked = profile?.hasHeartProblems == true,
             onCheckedChange = { viewModel.toggleHeartProblems(it) }
         )
 
         PillChip(
             label = "Osteoporosis",
-            checked = profile.hasOsteoporosis,
+            checked = profile?.hasOsteoporosis == true,
             onCheckedChange = { viewModel.toggleOsteoporosis(it) }
         )
 
         PillChip(
             label = "Ninguna",
-            checked = !profile.hasPregnancy && !profile.hasHeartProblems && !profile.hasOsteoporosis,
+            checked = profile?.hasPregnancy == false &&
+                profile?.hasHeartProblems == false &&
+                profile?.hasOsteoporosis == false,
             onCheckedChange = { checked ->
                 if (checked) {
                     viewModel.togglePregnancy(false)
@@ -227,7 +215,7 @@ fun OnboardingStep1Screen(
             modifier = Modifier.padding(top = 8.dp)
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Botón "Continuar" verde anclado al fondo
         Button(
@@ -273,7 +261,7 @@ fun ConditionTypeCard(
             containerColor = if (isSelected) MaterialTheme.colorScheme.tint else MaterialTheme.colorScheme.card
         ),
         shape = RoundedCornerShape(22.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        elevation = 0.dp,
         border = if (isSelected) BorderStroke(2.dp, MaterialTheme.colorScheme.accent) else BorderStroke(1.dp, MaterialTheme.colorScheme.line)
     ) {
         Row(
@@ -336,7 +324,7 @@ fun PillChip(
 
 @Composable
 fun FilledTextField(
-    textValue: String,
+    value: String,
     onValueChange: (String) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
@@ -345,25 +333,22 @@ fun FilledTextField(
     Column(
         modifier = modifier
     ) {
-        TextField(
-            value = textValue,
+        androidx.compose.material3.TextField(
+            value = value,
             onValueChange = onValueChange,
             label = { Text(label) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(18.dp),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.tint,
-                unfocusedContainerColor = MaterialTheme.colorScheme.tint,
-                disabledContainerColor = MaterialTheme.colorScheme.tint,
-                errorContainerColor = MaterialTheme.colorScheme.tint,
-                focusedIndicatorColor = MaterialTheme.colorScheme.accent,
-                unfocusedIndicatorColor = MaterialTheme.colorScheme.line,
-                focusedTextColor = MaterialTheme.colorScheme.ink,
-                unfocusedTextColor = MaterialTheme.colorScheme.ink,
-                focusedLabelColor = MaterialTheme.colorScheme.inkSecondary,
-                unfocusedLabelColor = MaterialTheme.colorScheme.inkSecondary
+            colors = androidx.compose.material3.TextFieldDefaults.textFieldColors(
+                backgroundColor = MaterialTheme.colorScheme.tint,
+                focusedBackgroundColor = MaterialTheme.colorScheme.tint,
+                unfocusedBackgroundColor = MaterialTheme.colorScheme.tint,
+                focusedLineColor = MaterialTheme.colorScheme.accent,
+                unfocusedLineColor = MaterialTheme.colorScheme.line,
+                textColor = MaterialTheme.colorScheme.ink,
+                labelColor = MaterialTheme.colorScheme.inkSecondary
             ),
-            keyboardOptions = keyboardOptions ?: KeyboardOptions.Default
+            keyboardOptions = keyboardOptions
         )
     }
 }
