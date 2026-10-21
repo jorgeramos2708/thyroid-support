@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jorgeramos.thyroidsupport.presentation.DailySymptomViewModel
@@ -34,13 +35,13 @@ fun DailySymptomScreen(
     var doctorNote by remember { mutableStateOf(latestEntry?.doctorNote ?: "") }
 
     val dateFormat = SimpleDateFormat("EEEE, dd 'de' MMMM", Locale("es", "MX"))
-    val today = dateFormat.format(Date())
+    val today = dateFormat.format(Date()).capitalize()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(horizontal = 20.dp, top = 24.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         TopAppBar(
             title = { Text("Síntomas de hoy") },
@@ -48,7 +49,9 @@ fun DailySymptomScreen(
                 IconButton(onClick = onNavigateBack) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Volver"
+                        contentDescription = "Volver",
+                        modifier = Modifier.size(48.dp),
+                        tint = MaterialTheme.colorScheme.ink
                     )
                 }
             },
@@ -58,84 +61,105 @@ fun DailySymptomScreen(
         )
 
         Text(
-            text = today.capitalize(),
+            text = today,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.inkSecondary
         )
 
-        Text(
-            text = "¿CÓMO TE SIENTES?",
-            style = MaterialTheme.typography.bodyMedium.copy(
-                color = MaterialTheme.colorScheme.primary
-            )
-        )
-
-        Text(
-            text = "0 nada · 10 muy intenso",
-            style = MaterialTheme.typography.bodySmall.copy(
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+        // Tarjeta "¿CÓMO TE SIENTES?"
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.card
             ),
-            modifier = Modifier.fillMaxWidth()
-        )
+            shape = RoundedCornerShape(22.dp),
+            elevation = 0.dp
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "¿CÓMO TE SIENTES?",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.ink
+                    )
+                    Text(
+                        text = "0 nada · 10 muy intenso",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.inkSecondary
+                    )
+                }
 
-        SymptomSliderRow(
-            label = "Cansancio",
-            value = fatigue,
-            onValueChange = { fatigue = it }
-        )
+                SymptomSliderRow(
+                    label = "Cansancio",
+                    value = fatigue,
+                    onValueChange = { fatigue = it }
+                )
+                SymptomSliderRow(
+                    label = "Sensibilidad al frío",
+                    value = coldSensitivity,
+                    onValueChange = { coldSensitivity = it }
+                )
+                SymptomSliderRow(
+                    label = "Palpitaciones",
+                    value = palpitations,
+                    onValueChange = { palpitations = it }
+                )
+                SymptomSliderRow(
+                    label = "Ánimo bajo",
+                    value = lowMood,
+                    onValueChange = { lowMood = it }
+                )
+                SymptomSliderRow(
+                    label = "Problemas de sueño",
+                    value = sleepProblems,
+                    onValueChange = { sleepProblems = it }
+                )
+            }
+        }
 
-        SymptomSliderRow(
-            label = "Sensibilidad al frío",
-            value = coldSensitivity,
-            onValueChange = { coldSensitivity = it }
-        )
-
-        SymptomSliderRow(
-            label = "Palpitaciones",
-            value = palpitations,
-            onValueChange = { palpitations = it }
-        )
-
-        SymptomSliderRow(
-            label = "Ánimo bajo",
-            value = lowMood,
-            onValueChange = { lowMood = it }
-        )
-
-        SymptomSliderRow(
-            label = "Problemas de sueño",
-            value = sleepProblems,
-            onValueChange = { sleepProblems = it }
-        )
-
+        // Dos tarjetas en fila: Peso y Pulso
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            ExpandedTextField(
-                value = weightKg,
-                onValueChange = { weightKg = it },
+            ValueCard(
                 label = "Peso",
-                unit = "kg"
+                unit = "kg",
+                value = weightKg,
+                onValueChange = { weightKg = it }
             )
-            ExpandedTextField(
-                value = heartRate,
-                onValueChange = { heartRate = it },
+            ValueCard(
                 label = "Pulso",
-                unit = "lpm"
+                unit = "lpm",
+                value = heartRate,
+                onValueChange = { heartRate = it }
             )
         }
 
+        // Campo nota para el médico
         OutlinedTextField(
             value = doctorNote,
             onValueChange = { doctorNote = it },
             label = { Text("Nota para tu médico (opcional)") },
             modifier = Modifier.fillMaxWidth(),
-            maxLines = 2
+            maxLines = 2,
+            shape = RoundedCornerShape(18.dp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = MaterialTheme.colorScheme.accent,
+                unfocusedBorderColor = MaterialTheme.colorScheme.line
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Botón Guardar registro
         Button(
             onClick = {
                 val weight = weightKg.toDoubleOrNull() ?: 0.0
@@ -153,9 +177,10 @@ fun DailySymptomScreen(
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            )
+                containerColor = MaterialTheme.colorScheme.accent,
+                contentColor = Color(0xFFFFFFFF)
+            ),
+            shape = RoundedCornerShape(28.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -201,17 +226,18 @@ fun SymptomSliderRow(
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
                 text = label,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.ink
             )
             Text(
                 text = value.toString(),
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    fontWeight = androidx.compose.ui.text.FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    fontWeight = FontWeight(700),
+                    color = MaterialTheme.colorScheme.accent
                 )
             )
         }
@@ -223,20 +249,24 @@ fun SymptomSliderRow(
             steps = 10,
             modifier = Modifier.fillMaxWidth(),
             colors = SliderDefaults.colors(
-                activeTrackColor = MaterialTheme.colorScheme.primary,
-                inactiveTrackColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f),
-                thumbColor = MaterialTheme.colorScheme.primary
+                activeTrackColor = MaterialTheme.colorScheme.accent,
+                inactiveTrackColor = MaterialTheme.colorScheme.tint,
+                thumbColor = Color(0xFFFFFFFF),
+                activeThumbColor = Color(0xFFFFFFFF),
+                inactiveThumbColor = Color(0xFFFFFFFF)
             )
-        )
+        ) { thumbOffset ->
+            // Draw thumb with border
+        }
     }
 }
 
 @Composable
-fun ExpandedTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
+fun ValueCard(
     label: String,
-    unit: String
+    unit: String,
+    value: String,
+    onValueChange: (String) -> Unit
 ) {
     Column(
         modifier = Modifier.weight(1f)
@@ -248,12 +278,17 @@ fun ExpandedTextField(
             keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
                 keyboardType = androidx.compose.foundation.text.KeyboardType.Number
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(18.dp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = MaterialTheme.colorScheme.accent,
+                unfocusedBorderColor = MaterialTheme.colorScheme.line
+            )
         )
         Text(
             text = unit,
             style = MaterialTheme.typography.bodySmall.copy(
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.inkSecondary
             ),
             modifier = Modifier.align(Alignment.End)
         )

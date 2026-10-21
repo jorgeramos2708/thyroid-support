@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary_dark">#1B4332</color>
-    <color name="primary_light">#D4ECD4</color>
-    <color name="surface">#FFFFFF</color>
-    <color name="background">#F0F4F0</color>
-    <color name="on_primary">#FFFFFF</color>
-    <color name="on_surface">#1E1E1E</color>
-    <color name="on_surface_variant">#666666</color>
-    <color name="outline">#BDBDBD</color>
+    <!-- Diseño verde salvia según diseno-thyroid-support.md -->
+    <color name="background">#F1F5F0</color>
+    <color name="ink">#1E3A2F</color>
+    <color name="inkSecondary">#4F6B5E</color>
+    <color name="accent">#2F6B4F</color>
+    <color name="tint">#DDEBE2</color>
+    <color name="line">#CFDDD3</color>
+    <color name="hero">#1E3A2F</color>
+    <color name="gold">#E3C58B</color>
+    <color name="goldOn">#2A2110</color>
+    <color name="card">#FFFFFF</color>
     <color name="error">#B3261E</color>
-    <color name="success">#2E7D32</color>
 </resources>
